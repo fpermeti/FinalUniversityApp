@@ -4,7 +4,6 @@ namespace WindowsFormsApp1.Impl {
 
     public class Schedule :Entity{
 
-        //public Guid Id { get; set; }
 
         public Student Student { get; set; }
 
@@ -15,9 +14,6 @@ namespace WindowsFormsApp1.Impl {
         public DateTime Calendar { get; set; }
 
 
-        //~Schedule() {
-                
-        //}
     }
 
 }
