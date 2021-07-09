@@ -51,28 +51,28 @@ namespace WindowsFormsApp1.WUI {
             // 
             this.ctrlSchedule.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.ctrlSchedule.FormattingEnabled = true;
-            this.ctrlSchedule.ItemHeight = 25;
-            this.ctrlSchedule.Location = new System.Drawing.Point(56, 460);
+            this.ctrlSchedule.ItemHeight = 32;
+            this.ctrlSchedule.Location = new System.Drawing.Point(56, 497);
             this.ctrlSchedule.Name = "ctrlSchedule";
-            this.ctrlSchedule.Size = new System.Drawing.Size(1059, 179);
+            this.ctrlSchedule.Size = new System.Drawing.Size(712, 164);
             this.ctrlSchedule.TabIndex = 7;
             // 
             // list3
             // 
             this.list3.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.list3.FormattingEnabled = true;
-            this.list3.ItemHeight = 21;
-            this.list3.Location = new System.Drawing.Point(440, 106);
+            this.list3.ItemHeight = 28;
+            this.list3.Location = new System.Drawing.Point(56, 246);
             this.list3.Name = "list3";
-            this.list3.Size = new System.Drawing.Size(308, 67);
+            this.list3.Size = new System.Drawing.Size(400, 88);
             this.list3.TabIndex = 6;
             // 
             // list1
             // 
             this.list1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.list1.FormattingEnabled = true;
-            this.list1.ItemHeight = 21;
-            this.list1.Location = new System.Drawing.Point(24, 216);
+            this.list1.ItemHeight = 28;
+            this.list1.Location = new System.Drawing.Point(56, 345);
             this.list1.Name = "list1";
             this.list1.Size = new System.Drawing.Size(400, 88);
             this.list1.TabIndex = 5;
@@ -81,15 +81,15 @@ namespace WindowsFormsApp1.WUI {
             // 
             this.listBox1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 21;
-            this.listBox1.Location = new System.Drawing.Point(24, 106);
+            this.listBox1.ItemHeight = 28;
+            this.listBox1.Location = new System.Drawing.Point(56, 133);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(400, 88);
             this.listBox1.TabIndex = 4;
             // 
             // ctrlExit
             // 
-            this.ctrlExit.Location = new System.Drawing.Point(468, 256);
+            this.ctrlExit.Location = new System.Drawing.Point(612, 401);
             this.ctrlExit.Name = "ctrlExit";
             this.ctrlExit.Size = new System.Drawing.Size(143, 32);
             this.ctrlExit.TabIndex = 8;
@@ -99,7 +99,7 @@ namespace WindowsFormsApp1.WUI {
             // 
             // button8
             // 
-            this.button8.Location = new System.Drawing.Point(56, 422);
+            this.button8.Location = new System.Drawing.Point(56, 450);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(143, 32);
             this.button8.TabIndex = 9;
@@ -108,14 +108,14 @@ namespace WindowsFormsApp1.WUI {
             // 
             // dateTimePicker2
             // 
-            this.dateTimePicker2.Location = new System.Drawing.Point(448, 216);
+            this.dateTimePicker2.Location = new System.Drawing.Point(555, 312);
             this.dateTimePicker2.Name = "dateTimePicker2";
-            this.dateTimePicker2.Size = new System.Drawing.Size(200, 20);
+            this.dateTimePicker2.Size = new System.Drawing.Size(200, 22);
             this.dateTimePicker2.TabIndex = 10;
             // 
             // button9
             // 
-            this.button9.Location = new System.Drawing.Point(505, 645);
+            this.button9.Location = new System.Drawing.Point(476, 683);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(143, 32);
             this.button9.TabIndex = 11;
@@ -125,7 +125,7 @@ namespace WindowsFormsApp1.WUI {
             // 
             // button10
             // 
-            this.button10.Location = new System.Drawing.Point(654, 645);
+            this.button10.Location = new System.Drawing.Point(625, 683);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(143, 32);
             this.button10.TabIndex = 12;
@@ -138,15 +138,15 @@ namespace WindowsFormsApp1.WUI {
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Calibri", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.label6.ForeColor = System.Drawing.Color.SaddleBrown;
-            this.label6.Location = new System.Drawing.Point(21, 54);
+            this.label6.Location = new System.Drawing.Point(21, 55);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(426, 42);
+            this.label6.Size = new System.Drawing.Size(538, 54);
             this.label6.TabIndex = 13;
             this.label6.Text = "University Courses Scheduler";
             // 
             // button11
             // 
-            this.button11.Location = new System.Drawing.Point(610, 57);
+            this.button11.Location = new System.Drawing.Point(608, 67);
             this.button11.Name = "button11";
             this.button11.Size = new System.Drawing.Size(187, 32);
             this.button11.TabIndex = 14;
@@ -156,12 +156,13 @@ namespace WindowsFormsApp1.WUI {
             // 
             // menuStrip1
             // 
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mainToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(809, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(839, 28);
             this.menuStrip1.TabIndex = 15;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -175,56 +176,56 @@ namespace WindowsFormsApp1.WUI {
             this.loadDataToolStripMenuItem,
             this.saveDataToolStripMenuItem});
             this.mainToolStripMenuItem.Name = "mainToolStripMenuItem";
-            this.mainToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
+            this.mainToolStripMenuItem.Size = new System.Drawing.Size(56, 24);
             this.mainToolStripMenuItem.Text = "Main";
             // 
             // initializeDedomenaToolStripMenuItem
             // 
             this.initializeDedomenaToolStripMenuItem.Name = "initializeDedomenaToolStripMenuItem";
-            this.initializeDedomenaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.initializeDedomenaToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
             this.initializeDedomenaToolStripMenuItem.Text = "Initialize Dedomena";
             this.initializeDedomenaToolStripMenuItem.Click += new System.EventHandler(this.initializeDedomenaToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(223, 6);
             // 
             // addToScheduleToolStripMenuItem
             // 
             this.addToScheduleToolStripMenuItem.Name = "addToScheduleToolStripMenuItem";
-            this.addToScheduleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.addToScheduleToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
             this.addToScheduleToolStripMenuItem.Text = "Add To Schedule...";
             this.addToScheduleToolStripMenuItem.Click += new System.EventHandler(this.addToScheduleToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(177, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(223, 6);
             // 
             // loadDataToolStripMenuItem
             // 
             this.loadDataToolStripMenuItem.Name = "loadDataToolStripMenuItem";
-            this.loadDataToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.loadDataToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
             this.loadDataToolStripMenuItem.Text = "Load Data";
             this.loadDataToolStripMenuItem.Click += new System.EventHandler(this.loadDataToolStripMenuItem_Click);
             // 
             // saveDataToolStripMenuItem
             // 
             this.saveDataToolStripMenuItem.Name = "saveDataToolStripMenuItem";
-            this.saveDataToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveDataToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
             this.saveDataToolStripMenuItem.Text = "Save Data";
             this.saveDataToolStripMenuItem.Click += new System.EventHandler(this.saveDataToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(47, 24);
             this.exitToolStripMenuItem.Text = "Exit";
             // 
             // DataForm1
             // 
-            this.ClientSize = new System.Drawing.Size(809, 737);
+            this.ClientSize = new System.Drawing.Size(839, 737);
             this.Controls.Add(this.button11);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.button10);
