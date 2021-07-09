@@ -11,7 +11,7 @@ namespace WindowsFormsApp1.Impl {
 
         public Guid CourseId { get; set; }
 
-        public DateTime Calendar { get; set; }
+        public string Calendar { get; set; }
 
 
     }

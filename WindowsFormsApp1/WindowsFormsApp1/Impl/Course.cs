@@ -1,8 +1,7 @@
 ﻿using System;
 
 namespace WindowsFormsApp1.Impl {
-    public class Course :Entity {
-
+    public class Course : Entity {
 
         public string Code { get; set; }
 
@@ -11,7 +10,6 @@ namespace WindowsFormsApp1.Impl {
         public int Hours { get; set; }
 
         public CourseCategory Category { get; set; }
-
 
     }
 

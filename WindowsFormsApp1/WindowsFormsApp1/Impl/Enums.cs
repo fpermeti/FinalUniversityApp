@@ -19,7 +19,9 @@ namespace WindowsFormsApp1.Impl {
     public enum ProfessorRank {
 
         Full,
+
         Associate,
+
         Assistant
     }
 

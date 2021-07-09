@@ -8,7 +8,7 @@ namespace WindowsFormsApp1.Impl {
   public  class Entity {
 
 
-        public Guid Id { get; private set; }
+        public Guid Id { get; set; }
 
 
         public Entity() {

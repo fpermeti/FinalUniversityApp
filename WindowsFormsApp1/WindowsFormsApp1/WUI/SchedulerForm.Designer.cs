@@ -39,6 +39,7 @@ namespace WindowsFormsApp1.WUI {
             this.ctrlStudents = new System.Windows.Forms.DataGridView();
             this.ctrlSchedules = new System.Windows.Forms.DataGridView();
             this.lblSchedules = new System.Windows.Forms.Label();
+            this.lblCalendar = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ctrlCourses)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ctrlProfessors)).BeginInit();
@@ -48,7 +49,7 @@ namespace WindowsFormsApp1.WUI {
             // 
             // ctrlAddSchedule
             // 
-            this.ctrlAddSchedule.Location = new System.Drawing.Point(175, 379);
+            this.ctrlAddSchedule.Location = new System.Drawing.Point(174, 392);
             this.ctrlAddSchedule.Name = "ctrlAddSchedule";
             this.ctrlAddSchedule.Size = new System.Drawing.Size(143, 32);
             this.ctrlAddSchedule.TabIndex = 8;
@@ -58,7 +59,7 @@ namespace WindowsFormsApp1.WUI {
             // 
             // ctrlRemoveSchedule
             // 
-            this.ctrlRemoveSchedule.Location = new System.Drawing.Point(15, 379);
+            this.ctrlRemoveSchedule.Location = new System.Drawing.Point(14, 392);
             this.ctrlRemoveSchedule.Name = "ctrlRemoveSchedule";
             this.ctrlRemoveSchedule.Size = new System.Drawing.Size(143, 32);
             this.ctrlRemoveSchedule.TabIndex = 9;
@@ -93,7 +94,7 @@ namespace WindowsFormsApp1.WUI {
             this.ctrlFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ctrlExit});
             this.ctrlFile.Name = "ctrlFile";
-            this.ctrlFile.Size = new System.Drawing.Size(46, 24);
+            this.ctrlFile.Size = new System.Drawing.Size(46, 26);
             this.ctrlFile.Text = "File";
             // 
             // ctrlExit
@@ -105,10 +106,12 @@ namespace WindowsFormsApp1.WUI {
             // 
             // ctrlCalendar
             // 
-            this.ctrlCalendar.Location = new System.Drawing.Point(12, 329);
+            this.ctrlCalendar.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.ctrlCalendar.Location = new System.Drawing.Point(106, 332);
             this.ctrlCalendar.Name = "ctrlCalendar";
             this.ctrlCalendar.Size = new System.Drawing.Size(200, 22);
             this.ctrlCalendar.TabIndex = 16;
+            this.ctrlCalendar.ValueChanged += new System.EventHandler(this.ctrlCalendar_ValueChanged);
             // 
             // lblCourses
             // 
@@ -210,9 +213,19 @@ namespace WindowsFormsApp1.WUI {
             this.lblSchedules.TabIndex = 24;
             this.lblSchedules.Text = "Select schedule";
             // 
+            // lblCalendar
+            // 
+            this.lblCalendar.AutoSize = true;
+            this.lblCalendar.Location = new System.Drawing.Point(12, 337);
+            this.lblCalendar.Name = "lblCalendar";
+            this.lblCalendar.Size = new System.Drawing.Size(79, 17);
+            this.lblCalendar.TabIndex = 25;
+            this.lblCalendar.Text = "Select date";
+            // 
             // SchedulerForm
             // 
             this.ClientSize = new System.Drawing.Size(1243, 666);
+            this.Controls.Add(this.lblCalendar);
             this.Controls.Add(this.lblSchedules);
             this.Controls.Add(this.ctrlSchedules);
             this.Controls.Add(this.ctrlStudents);
@@ -257,5 +270,6 @@ namespace WindowsFormsApp1.WUI {
         private System.Windows.Forms.DataGridView ctrlStudents;
         private System.Windows.Forms.DataGridView ctrlSchedules;
         private System.Windows.Forms.Label lblSchedules;
+        private System.Windows.Forms.Label lblCalendar;
     }
 }
