@@ -3,17 +3,22 @@ using System.Collections.Generic;
 
 
 namespace WindowsFormsApp1.Impl {
-    public class Professor {
-        public Guid ID { get; set; }
-        public string Name { get; set; }
-        public string Surname { get; set; }
-        public short Age { get; set; }
-        public string Rank { get; set; }
-        public List<CoursesCategoryEnum> CAN_TEACH { get; set; }
+    public class Professor :Person {
 
-        public Professor() {
-            ID = Guid.NewGuid();
-        }
+        //public Guid Id { get; set; }
+
+
+
+        public ProfessorRank Rank { get; set; }
+
+        //public string Rank { get; set; }
+
+        //public List<CourseCategoryEnum> CourseCategories { get; set; }
+
+
+        //public Professor() {
+        //    Id = Guid.NewGuid();
+        //}
     }
 
 }

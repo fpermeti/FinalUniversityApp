@@ -53,7 +53,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Impl\Course.cs" />
+    <Compile Include="Impl\Entity.cs" />
     <Compile Include="Impl\Enums.cs" />
+    <Compile Include="Impl\Person.cs" />
     <Compile Include="Impl\Student.cs" />
     <Compile Include="Impl\Professor.cs" />
     <Compile Include="Impl\Schedule.cs" />
@@ -65,7 +67,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="University.cs" />
+    <Compile Include="Impl\University.cs" />
     <EmbeddedResource Include="WUI\DataForm1.resx">
       <DependentUpon>DataForm1.cs</DependentUpon>
     </EmbeddedResource>

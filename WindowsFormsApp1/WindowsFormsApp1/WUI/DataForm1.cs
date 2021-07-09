@@ -11,7 +11,7 @@ namespace WindowsFormsApp1.WUI {
 
     public partial class DataForm1 : Form {
 
-        private University objects = new University();
+        private University _CodingSchool = new University();
 
         public DataForm1() {
             InitializeComponent();
@@ -25,29 +25,29 @@ namespace WindowsFormsApp1.WUI {
 
         private void loadDataToolStripMenuItem_Click(object sender, EventArgs e) {
 
-            JavaScriptSerializer r = new JavaScriptSerializer();
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
 
-            objects = r.Deserialize<University>(File.ReadAllText("Data.json"));
+            _CodingSchool = serializer.Deserialize<University>(File.ReadAllText("Data.json"));
 
-            foreach (Student a in objects.Students) {
-                list1.Items.Add(a.name + " " + a.surname);
+            foreach (Student student in _CodingSchool.Students) {
+                list1.Items.Add(student.Name + " " + student.Surname);
             }
 
-            for (int i = 0; i < objects._course.Count - 1; i++) {
+            for (int i = 0; i < _CodingSchool.Courses.Count - 1; i++) {
 
-                listBox1.Items.Add(objects._course[i].Code + "--" + objects._course[i].Subject);
+                listBox1.Items.Add(_CodingSchool.Courses[i].Code + "--" + _CodingSchool.Courses[i].Subject);
             }
 
 
-            foreach (Professor k in objects.prof_list) {
-                list3.Items.Add(string.Format("{0}  {1}", k.Name, k.Surname));
+            foreach (Professor professor in _CodingSchool.Professors) {
+                list3.Items.Add(string.Format("{0}  {1}", professor.Name, professor.Surname));
             }
         }
 
         private void saveDataToolStripMenuItem_Click(object sender, EventArgs e) {
-            JavaScriptSerializer save_Serializer = new JavaScriptSerializer();
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
 
-            File.WriteAllText("Data.json", save_Serializer.Serialize(objects));
+            File.WriteAllText("Data.json", serializer.Serialize(_CodingSchool));
         }
         #endregion
 
@@ -59,20 +59,20 @@ namespace WindowsFormsApp1.WUI {
 
         private void initializeDedomenaToolStripMenuItem_Click(object sender, EventArgs e) {
 
-            objects.run_once();
+            _CodingSchool.RunOnce();
 
-            foreach (Student a in objects.Students) {
-                list1.Items.Add(a.name + " " + a.surname);
+            foreach (Student student in _CodingSchool.Students) {
+                list1.Items.Add(student.Name + " " + student.Surname);
             }
 
-            foreach (Course bb in objects._course) {
-                listBox1.Items.Add(bb.Code + "--" + bb.Subject);
+            foreach (Course course in _CodingSchool.Courses) {
+                listBox1.Items.Add(course.Code + "--" + course.Subject);
             }
 
 
-            foreach (Professor cc1 in objects.prof_list) {
+            foreach (Professor professor in _CodingSchool.Professors) {
 
-                list3.Items.Add(string.Format("{0}  {1}", cc1.Name, cc1.Surname));
+                list3.Items.Add(string.Format("{0}  {1}", professor.Name, professor.Surname));
             }
 
             //should run only once!
@@ -81,31 +81,31 @@ namespace WindowsFormsApp1.WUI {
 
         private void button9_Click(object sender, EventArgs e) {
 
-            JavaScriptSerializer GG = new JavaScriptSerializer();
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
 
-            objects = GG.Deserialize<University>(File.ReadAllText("Data.json"));
+            _CodingSchool = serializer.Deserialize<University>(File.ReadAllText("Data.json"));
 
-            foreach (Student a in objects.Students) {
-                list1.Items.Add(a.name + " " + a.surname);
+            foreach (Student student in _CodingSchool.Students) {
+                list1.Items.Add(student.Name + " " + student.Surname);
             }
 
-            for (int i = 0; i < objects._course.Count - 1; i++) {
+            for (int i = 0; i < _CodingSchool.Courses.Count - 1; i++) {
 
-                listBox1.Items.Add(objects._course[i].Code + "--" + objects._course[i].Subject);
+                listBox1.Items.Add(_CodingSchool.Courses[i].Code + "--" + _CodingSchool.Courses[i].Subject);
             }
 
             // we do a loop
-            foreach (Professor cc1 in objects.prof_list) {
+            foreach (Professor professor in _CodingSchool.Professors) {
                 // we add to the list
-                list3.Items.Add(string.Format("{0}  {1}", cc1.Name, cc1.Surname));
+                list3.Items.Add(string.Format("{0}  {1}", professor.Name, professor.Surname));
             }
 
         }
 
         private void button10_Click(object sender, EventArgs e) {
-            JavaScriptSerializer ff = new JavaScriptSerializer();
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
 
-            File.WriteAllText("Data.json", ff.Serialize(objects));
+            File.WriteAllText("Data.json", serializer.Serialize(_CodingSchool));
         }
 
         private void ctrlExit_Click(object sender, EventArgs e) {
@@ -118,17 +118,22 @@ namespace WindowsFormsApp1.WUI {
 
                 // TODO: 3. A PROFESSOR CANNOT TEACH MORE THAN 4 COURSES PER DAY AND 40 COURSES PER WEEK
 
-                objects.ScheduleList.Add(new Schedule() { Course = listBox1.SelectedItem.ToString(), Student = list1.SelectedItem.ToString(), Professor = list3.SelectedItem.ToString(), Calendar = dateTimePicker2.Value });
+                _CodingSchool.Schedules.Add(new Schedule() {
+                    Course = new Course() { Code = listBox1.SelectedItem.ToString() },
+                    Student = new Student() { Surname = list1.SelectedItem.ToString() },
+                    Professor = new Professor() { Surname = list3.SelectedItem.ToString() },
+                    Calendar = dateTimePicker2.Value
+                });
 
                 ctrlSchedule.Items.Clear();
-                foreach (var AA in objects.ScheduleList) {
+                foreach (Schedule schedule in _CodingSchool.Schedules) {
 
-                    ctrlSchedule.Items.Add(AA.Calendar + " | " + AA.Course + " | " + AA.Student + " | " + AA.Professor);
+                    ctrlSchedule.Items.Add(schedule.Calendar + " | " + schedule.Course + " | " + schedule.Student + " | " + schedule.Professor);
 
                 }
             }
-            catch { 
-            
+            catch {
+
             }
             finally {
                 MessageBox.Show("all ok!");
@@ -136,8 +141,8 @@ namespace WindowsFormsApp1.WUI {
             }
         }
 
-        public void validate_professorCourse_with_studentCourse() { 
-        
+        public void validate_professorCourse_with_studentCourse() {
+
             //TODO: ???
 
         }
@@ -146,22 +151,22 @@ namespace WindowsFormsApp1.WUI {
 
         private void button11_Click(object sender, EventArgs e) {
 
-            
 
-            objects.run_once();
 
-            foreach (Student a in objects.Students) {
-                list1.Items.Add(a.name + " " + a.surname);
+            _CodingSchool.RunOnce();
+
+            foreach (Student student in _CodingSchool.Students) {
+                list1.Items.Add(student.Name + " " + student.Surname);
             }
 
-            foreach (Course bb in objects._course) {
-                listBox1.Items.Add(bb.Code + "--" + bb.Subject);
+            foreach (Course course in _CodingSchool.Courses) {
+                listBox1.Items.Add(course.Code + "--" + course.Subject);
             }
 
 
-            foreach (Professor cc1 in objects.prof_list) {
+            foreach (Professor professor in _CodingSchool.Professors) {
 
-                list3.Items.Add(string.Format("{0}  {1}", cc1.Name, cc1.Surname));
+                list3.Items.Add(string.Format("{0}  {1}", professor.Name, professor.Surname));
             }
 
             //should run only once!
@@ -173,21 +178,20 @@ namespace WindowsFormsApp1.WUI {
             // todo : display on a grid??
 
             // todo: add exception handling?
-                objects.ScheduleList.Add(new Schedule() { 
-                    Course = listBox1.SelectedItem.ToString(), Student = list1.SelectedItem.ToString()
-                        , Professor = list3.SelectedItem.ToString(), Calendar = dateTimePicker2.Value });
+            _CodingSchool.Schedules.Add(new Schedule() {
+                Course = new Course() { Code = listBox1.SelectedItem.ToString() },
+                Student = new Student() { Surname = list1.SelectedItem.ToString() },
+                Professor = new Professor() { Surname = list3.SelectedItem.ToString() },
+                Calendar = dateTimePicker2.Value
+            });
 
-                ctrlSchedule.Items.Clear();
-                foreach (var AA in objects.ScheduleList) {
+            ctrlSchedule.Items.Clear();
+            foreach (Schedule schedule in _CodingSchool.Schedules) {
 
-                    ctrlSchedule.Items.Add(
-                        AA.Calendar + " " + 
-                        AA.Course + " " + 
-                        AA.Student + " " + 
-                        AA.Professor);
+                ctrlSchedule.Items.Add(schedule.Calendar + " " + schedule.Course + " " + schedule.Student + " " + schedule.Professor);
 
-                }
-        
+            }
+
         }
 
     }
