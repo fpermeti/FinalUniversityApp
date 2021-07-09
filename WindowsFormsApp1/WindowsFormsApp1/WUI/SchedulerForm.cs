@@ -281,7 +281,7 @@ namespace WindowsFormsApp1.WUI {
 
             DataGridViewButtonColumn ctrlViewProfessorCourses = new DataGridViewButtonColumn();
             ctrlViewProfessorCourses.Name = "ViewCourses";
-            ctrlViewProfessorCourses.Text = "View Courses";
+            ctrlViewProfessorCourses.HeaderText = "View Courses";
             //int columnIndex = 2;
             if (ctrlProfessors.Columns["ViewCourses"] == null) {
                 ctrlProfessors.Columns.Insert(ctrlProfessors.Columns.Count, ctrlViewProfessorCourses);
