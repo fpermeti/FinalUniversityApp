@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Reflection;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
 using WindowsFormsApp1.Impl;
@@ -13,57 +14,51 @@ namespace WindowsFormsApp1.WUI {
 
         private University _CodingSchool;
 
-        private List<Schedule> Schedules;
-
-
         private const string _JsonFile = "UniversityData.json";
-
-
 
         public SchedulerForm() {
             InitializeComponent();
         }
 
-
-
-
         private void PopulateListBoxes() {
 
-            //_CodingSchool = new University();
 
             if (_CodingSchool.Professors.Count == 0 || _CodingSchool.Students.Count == 0 || _CodingSchool.Courses.Count == 0) {
 
                 DataPopulation.CreateDummyData(_CodingSchool);
-
             }
 
-
-
-            foreach (Course course in _CodingSchool.Courses) {
-                ctrlCourses.Items.Add(string.Format("{0}--{1}", course.Code, course.Subject));
-            }
-
-
-
-            foreach (Professor professor in _CodingSchool.Professors) {
-
-                ctrlProfessors.Items.Add(string.Format("{0}  {1}", professor.Name, professor.Surname));
-            }
-
-
-            foreach (Student student in _CodingSchool.Students) {
-                ctrlStudents.Items.Add(string.Format("{0}  {1}", student.Name, student.Surname));
-            }
-
-
-            foreach (Schedule schedule in _CodingSchool.Schedules) {
-                ctrlSchedules.Items.Add(string.Format("{0}--{1}--{2}--{3}",
-                    schedule.Calendar, schedule.Course.Category.ToString(), schedule.Professor.Surname, schedule.Student.Surname));
-            }
-
+            PopulateSchedulesDataGrid();
         }
 
+        private void PopulateSchedulesDataGrid() {
+            DataTable dataTable = new DataTable();
 
+            dataTable.Columns.Add(new DataColumn("Id", typeof(Guid)));
+            PropertyInfo[] properties = typeof(Schedule).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            foreach (PropertyInfo property in properties) {
+                if (property.Name != "Id") {
+
+                    dataTable.Columns.Add(new DataColumn(property.Name, property.PropertyType));
+                }
+            }
+
+            foreach (Schedule schedule in _CodingSchool.Schedules) {
+
+                DataRow dataRow = dataTable.NewRow();
+
+                dataRow["Id"] = schedule.Id;
+                dataRow["Calendar"] = schedule.Calendar;
+                dataRow["CourseId"] = schedule.CourseId;
+                dataRow["ProfessorId"] = schedule.ProfessorId;
+                dataRow["StudentId"] = schedule.StudentId;
+
+                dataTable.Rows.Add(dataRow);
+            }
+
+            ctrlSchedules.DataSource = dataTable;
+            ctrlSchedules.Columns[0].Visible = false;
+        }
 
         private void DeserializeFromJson() {
 
@@ -81,19 +76,12 @@ namespace WindowsFormsApp1.WUI {
             }
             else {
 
-
                 File.Create(path).Dispose();
 
                 _CodingSchool = new University();
 
                 SerializeToJson(_CodingSchool);
-
             }
-
-
-
-
-
         }
 
         private void SerializeToJson(object objectToBeSerialized) {
@@ -111,43 +99,6 @@ namespace WindowsFormsApp1.WUI {
         }
 
 
-        private void LoadfromJson() {
-            JavaScriptSerializer serializer = new JavaScriptSerializer();
-
-            _CodingSchool = serializer.Deserialize<University>(File.ReadAllText(_JsonFile));
-
-
-
-            //foreach (Course course in _CodingSchool.Courses) {
-            //    ctrlCourses.Items.Add(string.Format("{0} -- {1}", course.Code, course.Subject));
-            //}
-
-            //foreach (Professor professor in _CodingSchool.Professors) {
-
-            //    ctrlProfessors.Items.Add(string.Format("{0}  {1}", professor.Name, professor.Surname));
-            //}
-
-            //foreach (Student student in _CodingSchool.Students) {
-            //    ctrlStudents.Items.Add(string.Format("{0}  {1}", student.Name, student.Surname));
-            //}
-        }
-
-
-
-        private void SaveToJson() {
-            JavaScriptSerializer serializer = new JavaScriptSerializer();
-
-            File.WriteAllText(_JsonFile, serializer.Serialize(_CodingSchool));
-
-            //MessageBox.Show("OK");
-
-        }
-
-
-
-
-
-
         private void AddSchedule() {
 
             // TODO: 1. CANNOT ADD SAME STUDENT + PROFESSOR IN SAME DATE & HOUR
@@ -155,36 +106,30 @@ namespace WindowsFormsApp1.WUI {
             // TODO: 2. EACH STUDENT CANNOT HAVE MORE THAN 3 COURSES PER DAY!
 
             // TODO: 3. A PROFESSOR CANNOT TEACH MORE THAN 4 COURSES PER DAY AND 40 COURSES PER WEEK
-            if (ctrlProfessors.SelectedItems.Count != 0 && ctrlStudents.SelectedItems.Count != 0 && ctrlCourses.SelectedItems.Count != 0) {
-
+            if (ctrlCourses.SelectedRows.Count > 0 && ctrlProfessors.SelectedRows.Count > 0 && ctrlStudents.SelectedRows.Count > 0) {
 
                 _CodingSchool.Schedules.Add(new Schedule() {
-                    Course = _CodingSchool.Courses.Find(x => x.Code == ctrlCourses.SelectedItem.ToString().Substring(0, Math.Max(ctrlCourses.SelectedItem.ToString().IndexOf('-'), 0))),
-                    Student = _CodingSchool.Students.Find(x => x.Name == ctrlStudents.SelectedItem.ToString().Substring(0, Math.Max(ctrlStudents.SelectedItem.ToString().IndexOf(' '), 0))),
-                    Professor = _CodingSchool.Professors.Find(x => x.Name == ctrlProfessors.SelectedItem.ToString().Substring(0, Math.Max(ctrlProfessors.SelectedItem.ToString().IndexOf(' '), 0))),
+
+                    CourseId = Guid.Parse(Convert.ToString(ctrlCourses.SelectedRows[0].Cells["Id"].Value)),
+
+                    ProfessorId = Guid.Parse(Convert.ToString(ctrlProfessors.SelectedRows[0].Cells["Id"].Value)),
+
+                    StudentId = Guid.Parse(Convert.ToString(ctrlStudents.SelectedRows[0].Cells["Id"].Value)),
+
                     Calendar = ctrlCalendar.Value
                 });
 
-                ctrlSchedules.Items.Clear();
-                foreach (Schedule schedule in _CodingSchool.Schedules) {
-
-                    ctrlSchedules.Items.Add(schedule.Calendar + " | " + schedule.Course.Code + " | " + schedule.Student.Surname + " | " + schedule.Professor.Surname);
-
-                }
+                PopulateSchedulesDataGrid();
 
                 SerializeToJson(_CodingSchool);
 
                 MessageBox.Show("OK");
-
 
             }
             else {
 
                 MessageBox.Show("Please select an item in each list");
             }
-
-
-
 
         }
 
@@ -196,16 +141,6 @@ namespace WindowsFormsApp1.WUI {
 
 
 
-        private void ctrlSaveData_Click(object sender, EventArgs e) {
-            //SaveToJson();
-            SerializeToJson(_CodingSchool);
-        }
-
-        private void ctrlLoadData_Click(object sender, EventArgs e) {
-            //LoadfromJson();
-
-        }
-
         private void ctrlAddSchedule_Click(object sender, EventArgs e) {
             AddSchedule();
 
@@ -213,13 +148,123 @@ namespace WindowsFormsApp1.WUI {
 
         private void ctrlRemoveSchedule_Click(object sender, EventArgs e) {
 
+            if (ctrlSchedules.SelectedRows.Count > 0) {
+
+                _CodingSchool.Schedules.RemoveAll(x => x.Id == Guid.Parse(Convert.ToString(ctrlSchedules.SelectedRows[0].Cells["Id"].Value)));
+
+                foreach (DataGridViewRow dataGridViewRow in ctrlSchedules.SelectedRows) {
+                    ctrlSchedules.Rows.RemoveAt(dataGridViewRow.Index);
+                }
+
+                SerializeToJson(_CodingSchool);
+
+            }
+            else {
+
+                MessageBox.Show("You have to select a specific row.");
+            }
+
         }
 
         private void SchedulerForm_Load(object sender, EventArgs e) {
+
             DeserializeFromJson();
 
-
             PopulateListBoxes();
+
+            PopulateCoursesDataGridView();
+
+            PopulateProfessorsDataGridView();
+
+            PopulateStudentsDataGridView();
+
+        }
+
+        private void PopulateStudentsDataGridView() {
+            DataTable dataTable = new DataTable();
+
+            dataTable.Columns.Add(new DataColumn("Id", typeof(Guid)));
+            PropertyInfo[] properties = typeof(Student).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            foreach (PropertyInfo property in properties) {
+                if (property.Name != "Id") {
+
+                    dataTable.Columns.Add(new DataColumn(property.Name, property.PropertyType));
+                }
+            }
+
+            foreach (Student student in _CodingSchool.Students) {
+
+                DataRow dataRow = dataTable.NewRow();
+
+                dataRow["Id"] = student.Id;
+                dataRow["Surname"] = student.Surname;
+                dataRow["Name"] = student.Name;
+                dataRow["Age"] = student.Age;
+                dataRow["RegistrationNumber"] = student.RegistrationNumber;
+
+                dataTable.Rows.Add(dataRow);
+            }
+
+            ctrlStudents.DataSource = dataTable;
+            ctrlStudents.Columns[0].Visible = false;
+        }
+
+        private void PopulateProfessorsDataGridView() {
+            DataTable dataTable = new DataTable();
+
+            dataTable.Columns.Add(new DataColumn("Id", typeof(Guid)));
+            PropertyInfo[] properties = typeof(Professor).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            foreach (PropertyInfo property in properties) {
+                if (property.Name != "Id") {
+
+                    dataTable.Columns.Add(new DataColumn(property.Name, property.PropertyType));
+                }
+            }
+
+            foreach (Professor professor in _CodingSchool.Professors) {
+
+                DataRow dataRow = dataTable.NewRow();
+
+                dataRow["Id"] = professor.Id;
+                dataRow["Surname"] = professor.Surname;
+                dataRow["Name"] = professor.Name;
+                dataRow["Age"] = professor.Age;
+                dataRow["Rank"] = professor.Rank;
+
+                dataTable.Rows.Add(dataRow);
+            }
+
+            ctrlProfessors.DataSource = dataTable;
+            ctrlProfessors.Columns[0].Visible = false;
+        }
+
+        private void PopulateCoursesDataGridView() {
+            DataTable dataTable = new DataTable();
+
+            dataTable.Columns.Add(new DataColumn("Id", typeof(Guid)));
+            PropertyInfo[] properties = typeof(Course).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            foreach (PropertyInfo property in properties) {
+                if (property.Name != "Id") {
+
+                    dataTable.Columns.Add(new DataColumn(property.Name, property.PropertyType));
+                }
+            }
+
+            foreach (Course course in _CodingSchool.Courses) {
+
+                DataRow dataRow = dataTable.NewRow();
+
+                dataRow["Id"] = course.Id;
+                dataRow["Code"] = course.Code;
+                dataRow["Subject"] = course.Subject;
+                dataRow["Hours"] = course.Hours;
+                dataRow["Category"] = course.Category;
+
+                dataTable.Rows.Add(dataRow);
+            }
+
+            ctrlCourses.DataSource = dataTable;
+            ctrlCourses.Columns[0].Visible = false;
         }
     }
 }

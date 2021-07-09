@@ -7,11 +7,7 @@ using System.Threading.Tasks;
 namespace WindowsFormsApp1.Impl {
     public class DataPopulation {
 
-
-
         public static void CreateDummyData(University codingSchool) {
-
-            
 
             codingSchool.Courses.Add(new Course() {
                 Code = "01",
@@ -56,7 +52,6 @@ namespace WindowsFormsApp1.Impl {
                 Courses = new List<Course>() { codingSchool.Courses.FirstOrDefault(x=> x.Code=="01"), codingSchool.Courses.FirstOrDefault(x=> x.Code=="03") }
             });
 
-
             codingSchool.Students.Add(new Student() {
                 Name = "Grigoris",
                 Surname = "Konstadinou",
@@ -64,7 +59,6 @@ namespace WindowsFormsApp1.Impl {
                 RegistrationNumber = "1235",
                 Courses = new List<Course>() { codingSchool.Courses.FirstOrDefault(x => x.Code == "02"), codingSchool.Courses.FirstOrDefault(x => x.Code == "04") }
             });
-
 
             codingSchool.Students.Add(new Student() {
                 Name = "Panagiotis",
@@ -82,10 +76,7 @@ namespace WindowsFormsApp1.Impl {
                 Courses = new List<Course>() { codingSchool.Courses.FirstOrDefault(x => x.Code == "03"), codingSchool.Courses.FirstOrDefault(x => x.Code == "04") }
 
             });
-
-
-        
-
+            
             codingSchool.Professors.Add(new Professor() {
                 Name = "Giorgos",
                 Surname = "Papadopoulos",
@@ -103,7 +94,6 @@ namespace WindowsFormsApp1.Impl {
                 Courses = new List<Course>() { codingSchool.Courses.FirstOrDefault(x => x.Code == "05"), codingSchool.Courses.FirstOrDefault(x => x.Code == "03") }
 
             });
-
 
         }
 
