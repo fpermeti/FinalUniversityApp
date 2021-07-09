@@ -13,6 +13,13 @@ namespace WindowsFormsApp1.WUI {
 
         private University _CodingSchool;
 
+        private List<Schedule> Schedules;
+
+
+        private const string _JsonFile = "UniversityData.json";
+
+
+
         public SchedulerForm() {
             InitializeComponent();
         }
@@ -20,97 +27,22 @@ namespace WindowsFormsApp1.WUI {
 
 
 
+        private void PopulateListBoxes() {
 
-        public void PopulateData() {
+            //_CodingSchool = new University();
 
-            _CodingSchool = new University();
+            if (_CodingSchool.Professors.Count == 0 || _CodingSchool.Students.Count == 0 || _CodingSchool.Courses.Count == 0) {
 
+                DataPopulation.CreateDummyData(_CodingSchool);
 
-          
-            _CodingSchool.Courses.Add(new Course() {
-                //Id = Guid.NewGuid(),
-                Code = "01",
-                Subject = "Quantum Physics",
-                Category = 0, // physics
-                Hours = 10
-            });
-
-            _CodingSchool.Courses.Add(new Course() {
-                //Id = Guid.NewGuid(),
-                Code = "02",
-                Subject = "Electo-Dynamics",
-                Category = CourseCategory.Physics, // physics ?
-                Hours = 30
-            });
-
-            _CodingSchool.Courses.Add(new Course() {
-                //Id = Guid.NewGuid(),
-                Code = "03",
-                Subject = "Basic Chemistry",
-                Category = CourseCategory.Chemistry, // Chemistry
-                Hours = 50
-            });
-
-            _CodingSchool.Courses.Add(new Course() {
-                //Id = Guid.NewGuid(),
-                Code = "04",
-                Subject = "Financial II",
-                Category = CourseCategory.Financial, // Financial
-                Hours = 70
-            });
-
-            _CodingSchool.Courses.Add(new Course() {
-                //Id = Guid.NewGuid(),
-                Code = "05",
-                Subject = "Mathematics I",
-                Category = CourseCategory.Mathematics, // Mathematics
-                Hours = 90
-            });
-
-            _CodingSchool.Students.Add(new Student() {
-                //Id = Guid.NewGuid(),
-                Name = "Fotis",
-                Surname = "Chrysoulas",
-                RegistrationNumber = "1234",
-                CourseCategories = new List<CourseCategory>() { CourseCategory.Chemistry, CourseCategory.Financial }
-            });
-
-
-            _CodingSchool.Students.Add(new Student() {
-                //Id = Guid.NewGuid(),
-                Name = "Dimitris",
-                Surname = "Raptodimos",
-                RegistrationNumber = "1235",
-                CourseCategories = new List<CourseCategory>() { CourseCategory.Physics, CourseCategory.Financial }
-            });
-
-            _CodingSchool.Professors.Add(new Professor() {
-                Name = "Maria",
-                Surname = "Papadopoulou",
-                Rank = ProfessorRank.Assistant
-            });
-
-            _CodingSchool.Professors.Add(new Professor() {
-                Name = "Giorgos",
-                Surname = "Papadopoulos",
-                Rank = ProfessorRank.Associate
-            });
-
-            _CodingSchool.Professors.Add(new Professor() {
-                Name = "Nikolaos",
-                Surname = "Papadopoulos",
-                Rank = ProfessorRank.Full
-            });
-
-
-
-            foreach (Student student in _CodingSchool.Students) {
-                ctrlStudents.Items.Add(student.Name + " " + student.Surname);
             }
+
+
 
             foreach (Course course in _CodingSchool.Courses) {
-                ctrlCourses.Items.Add(course.Code + "--" + course.Subject);
+                ctrlCourses.Items.Add(string.Format("{0}--{1}", course.Code, course.Subject));
             }
+
 
 
             foreach (Professor professor in _CodingSchool.Professors) {
@@ -119,86 +51,141 @@ namespace WindowsFormsApp1.WUI {
             }
 
 
+            foreach (Student student in _CodingSchool.Students) {
+                ctrlStudents.Items.Add(string.Format("{0}  {1}", student.Name, student.Surname));
+            }
 
+
+            foreach (Schedule schedule in _CodingSchool.Schedules) {
+                ctrlSchedules.Items.Add(string.Format("{0}--{1}--{2}--{3}",
+                    schedule.Calendar, schedule.Course.Category.ToString(), schedule.Professor.Surname, schedule.Student.Surname));
+            }
 
         }
 
 
 
+        private void DeserializeFromJson() {
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+
+            string path = Path.Combine(Environment.CurrentDirectory, _JsonFile);
+
+            string data = string.Empty;
+
+            if (File.Exists(path)) {
+
+                data = File.ReadAllText(path);
+
+                _CodingSchool = serializer.Deserialize<University>(data);
+            }
+            else {
+
+
+                File.Create(path).Dispose();
+
+                _CodingSchool = new University();
+
+                SerializeToJson(_CodingSchool);
+
+            }
 
 
 
-     
 
-      
+
+        }
+
+        private void SerializeToJson(object objectToBeSerialized) {
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+
+            string data = serializer.Serialize(objectToBeSerialized);
+
+            string path = Path.Combine(Environment.CurrentDirectory, _JsonFile);
+
+            File.WriteAllText(path, data);
+
+            //MessageBox.Show("OK");
+
+        }
+
 
         private void LoadfromJson() {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
 
-            _CodingSchool = serializer.Deserialize<University>(File.ReadAllText("Data.json"));
-
-            foreach (Student student in _CodingSchool.Students) {
-                ctrlStudents.Items.Add(student.Name + " " + student.Surname);
-            }
-
-            for (int i = 0; i < _CodingSchool.Courses.Count - 1; i++) {
-
-                ctrlCourses.Items.Add(_CodingSchool.Courses[i].Code + "--" + _CodingSchool.Courses[i].Subject);
-            }
+            _CodingSchool = serializer.Deserialize<University>(File.ReadAllText(_JsonFile));
 
 
-            foreach (Professor professor in _CodingSchool.Professors) {
-                ctrlProfessors.Items.Add(string.Format("{0}  {1}", professor.Name, professor.Surname));
-            }
+
+            //foreach (Course course in _CodingSchool.Courses) {
+            //    ctrlCourses.Items.Add(string.Format("{0} -- {1}", course.Code, course.Subject));
+            //}
+
+            //foreach (Professor professor in _CodingSchool.Professors) {
+
+            //    ctrlProfessors.Items.Add(string.Format("{0}  {1}", professor.Name, professor.Surname));
+            //}
+
+            //foreach (Student student in _CodingSchool.Students) {
+            //    ctrlStudents.Items.Add(string.Format("{0}  {1}", student.Name, student.Surname));
+            //}
         }
 
-       
+
 
         private void SaveToJson() {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
 
-            File.WriteAllText("Data.json", serializer.Serialize(_CodingSchool));
+            File.WriteAllText(_JsonFile, serializer.Serialize(_CodingSchool));
+
+            //MessageBox.Show("OK");
+
         }
 
-        private void DataForm1_Load(object sender, EventArgs e) {
-
-            PopulateData();
-        }
 
 
-     
+
+
 
         private void AddSchedule() {
-            try {
 
-                // TODO: 1. CANNOT ADD SAME STUDENT + PROFESSOR IN SAME DATE & HOUR
+            // TODO: 1. CANNOT ADD SAME STUDENT + PROFESSOR IN SAME DATE & HOUR
 
-                // TODO: 2. EACH STUDENT CANNOT HAVE MORE THAN 3 COURSES PER DAY!
+            // TODO: 2. EACH STUDENT CANNOT HAVE MORE THAN 3 COURSES PER DAY!
 
-                // TODO: 3. A PROFESSOR CANNOT TEACH MORE THAN 4 COURSES PER DAY AND 40 COURSES PER WEEK
+            // TODO: 3. A PROFESSOR CANNOT TEACH MORE THAN 4 COURSES PER DAY AND 40 COURSES PER WEEK
+            if (ctrlProfessors.SelectedItems.Count != 0 && ctrlStudents.SelectedItems.Count != 0 && ctrlCourses.SelectedItems.Count != 0) {
+
 
                 _CodingSchool.Schedules.Add(new Schedule() {
-                    Course = new Course() { Code = ctrlCourses.SelectedItem.ToString() },
-                    Student = new Student() { Surname = ctrlStudents.SelectedItem.ToString() },
-                    Professor = new Professor() { Surname = ctrlProfessors.SelectedItem.ToString() },
+                    Course = _CodingSchool.Courses.Find(x => x.Code == ctrlCourses.SelectedItem.ToString().Substring(0, Math.Max(ctrlCourses.SelectedItem.ToString().IndexOf('-'), 0))),
+                    Student = _CodingSchool.Students.Find(x => x.Name == ctrlStudents.SelectedItem.ToString().Substring(0, Math.Max(ctrlStudents.SelectedItem.ToString().IndexOf(' '), 0))),
+                    Professor = _CodingSchool.Professors.Find(x => x.Name == ctrlProfessors.SelectedItem.ToString().Substring(0, Math.Max(ctrlProfessors.SelectedItem.ToString().IndexOf(' '), 0))),
                     Calendar = ctrlCalendar.Value
                 });
 
                 ctrlSchedules.Items.Clear();
                 foreach (Schedule schedule in _CodingSchool.Schedules) {
 
-                    ctrlSchedules.Items.Add(schedule.Calendar + " | " + schedule.Course + " | " + schedule.Student + " | " + schedule.Professor);
+                    ctrlSchedules.Items.Add(schedule.Calendar + " | " + schedule.Course.Code + " | " + schedule.Student.Surname + " | " + schedule.Professor.Surname);
 
                 }
 
-                MessageBox.Show("all ok!");
+                SerializeToJson(_CodingSchool);
+
+                MessageBox.Show("OK");
 
 
             }
-            catch {
+            else {
 
+                MessageBox.Show("Please select an item in each list");
             }
-            
+
+
+
+
         }
 
 
@@ -210,12 +197,12 @@ namespace WindowsFormsApp1.WUI {
 
 
         private void ctrlSaveData_Click(object sender, EventArgs e) {
-            SaveToJson();
-
+            //SaveToJson();
+            SerializeToJson(_CodingSchool);
         }
 
         private void ctrlLoadData_Click(object sender, EventArgs e) {
-            LoadfromJson();
+            //LoadfromJson();
 
         }
 
@@ -229,7 +216,10 @@ namespace WindowsFormsApp1.WUI {
         }
 
         private void SchedulerForm_Load(object sender, EventArgs e) {
-            PopulateData();
+            DeserializeFromJson();
+
+
+            PopulateListBoxes();
         }
     }
 }

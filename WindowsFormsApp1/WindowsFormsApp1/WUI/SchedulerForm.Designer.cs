@@ -38,6 +38,9 @@ namespace WindowsFormsApp1.WUI {
             this.ctrlLoadData = new System.Windows.Forms.ToolStripMenuItem();
             this.ctrlSaveData = new System.Windows.Forms.ToolStripMenuItem();
             this.ctrlCalendar = new System.Windows.Forms.DateTimePicker();
+            this.lblCourses = new System.Windows.Forms.Label();
+            this.lblProfessors = new System.Windows.Forms.Label();
+            this.lblStudents = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -45,9 +48,11 @@ namespace WindowsFormsApp1.WUI {
             // 
             this.ctrlSchedules.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.ctrlSchedules.FormattingEnabled = true;
+            this.ctrlSchedules.HorizontalScrollbar = true;
             this.ctrlSchedules.ItemHeight = 32;
             this.ctrlSchedules.Location = new System.Drawing.Point(12, 437);
             this.ctrlSchedules.Name = "ctrlSchedules";
+            this.ctrlSchedules.ScrollAlwaysVisible = true;
             this.ctrlSchedules.Size = new System.Drawing.Size(1234, 196);
             this.ctrlSchedules.TabIndex = 7;
             // 
@@ -55,9 +60,11 @@ namespace WindowsFormsApp1.WUI {
             // 
             this.ctrlProfessors.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.ctrlProfessors.FormattingEnabled = true;
+            this.ctrlProfessors.HorizontalScrollbar = true;
             this.ctrlProfessors.ItemHeight = 28;
             this.ctrlProfessors.Location = new System.Drawing.Point(427, 133);
             this.ctrlProfessors.Name = "ctrlProfessors";
+            this.ctrlProfessors.ScrollAlwaysVisible = true;
             this.ctrlProfessors.Size = new System.Drawing.Size(400, 172);
             this.ctrlProfessors.TabIndex = 6;
             // 
@@ -65,9 +72,11 @@ namespace WindowsFormsApp1.WUI {
             // 
             this.ctrlStudents.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.ctrlStudents.FormattingEnabled = true;
+            this.ctrlStudents.HorizontalScrollbar = true;
             this.ctrlStudents.ItemHeight = 28;
             this.ctrlStudents.Location = new System.Drawing.Point(846, 133);
             this.ctrlStudents.Name = "ctrlStudents";
+            this.ctrlStudents.ScrollAlwaysVisible = true;
             this.ctrlStudents.Size = new System.Drawing.Size(400, 172);
             this.ctrlStudents.TabIndex = 5;
             // 
@@ -75,9 +84,11 @@ namespace WindowsFormsApp1.WUI {
             // 
             this.ctrlCourses.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.ctrlCourses.FormattingEnabled = true;
+            this.ctrlCourses.HorizontalScrollbar = true;
             this.ctrlCourses.ItemHeight = 28;
             this.ctrlCourses.Location = new System.Drawing.Point(12, 133);
             this.ctrlCourses.Name = "ctrlCourses";
+            this.ctrlCourses.ScrollAlwaysVisible = true;
             this.ctrlCourses.Size = new System.Drawing.Size(400, 172);
             this.ctrlCourses.TabIndex = 4;
             // 
@@ -169,9 +180,39 @@ namespace WindowsFormsApp1.WUI {
             this.ctrlCalendar.Size = new System.Drawing.Size(200, 22);
             this.ctrlCalendar.TabIndex = 16;
             // 
+            // lblCourses
+            // 
+            this.lblCourses.AutoSize = true;
+            this.lblCourses.Location = new System.Drawing.Point(12, 113);
+            this.lblCourses.Name = "lblCourses";
+            this.lblCourses.Size = new System.Drawing.Size(94, 17);
+            this.lblCourses.TabIndex = 17;
+            this.lblCourses.Text = "Select course";
+            // 
+            // lblProfessors
+            // 
+            this.lblProfessors.AutoSize = true;
+            this.lblProfessors.Location = new System.Drawing.Point(424, 113);
+            this.lblProfessors.Name = "lblProfessors";
+            this.lblProfessors.Size = new System.Drawing.Size(111, 17);
+            this.lblProfessors.TabIndex = 18;
+            this.lblProfessors.Text = "Select professor";
+            // 
+            // lblStudents
+            // 
+            this.lblStudents.AutoSize = true;
+            this.lblStudents.Location = new System.Drawing.Point(843, 113);
+            this.lblStudents.Name = "lblStudents";
+            this.lblStudents.Size = new System.Drawing.Size(98, 17);
+            this.lblStudents.TabIndex = 19;
+            this.lblStudents.Text = "Select student";
+            // 
             // SchedulerForm
             // 
             this.ClientSize = new System.Drawing.Size(1275, 655);
+            this.Controls.Add(this.lblStudents);
+            this.Controls.Add(this.lblProfessors);
+            this.Controls.Add(this.lblCourses);
             this.Controls.Add(this.ctrlCalendar);
             this.Controls.Add(this.ctrlTitle);
             this.Controls.Add(this.ctrlRemoveSchedule);
@@ -183,6 +224,7 @@ namespace WindowsFormsApp1.WUI {
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "SchedulerForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Load += new System.EventHandler(this.SchedulerForm_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -207,5 +249,8 @@ namespace WindowsFormsApp1.WUI {
         private System.Windows.Forms.ToolStripMenuItem ctrlFile;
         private System.Windows.Forms.ToolStripMenuItem ctrlExit;
         private System.Windows.Forms.DateTimePicker ctrlCalendar;
+        private System.Windows.Forms.Label lblCourses;
+        private System.Windows.Forms.Label lblProfessors;
+        private System.Windows.Forms.Label lblStudents;
     }
 }

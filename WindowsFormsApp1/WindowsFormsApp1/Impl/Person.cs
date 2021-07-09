@@ -14,7 +14,7 @@ public    class Person :Entity{
 
         public int Age { get; set; }
 
-        public List<CourseCategory> CourseCategories { get; set; }
+        public List<Course> Courses { get; set; }
 
 
     }

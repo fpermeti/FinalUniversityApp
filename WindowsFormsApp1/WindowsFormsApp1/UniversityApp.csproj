@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Impl\Course.cs" />
+    <Compile Include="Impl\DataPopulation.cs" />
     <Compile Include="Impl\Entity.cs" />
     <Compile Include="Impl\Enums.cs" />
     <Compile Include="Impl\Person.cs" />
