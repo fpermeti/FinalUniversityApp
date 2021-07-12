@@ -17,6 +17,14 @@ namespace WindowsFormsApp1.WUI {
 
         private const string _JsonFile = "UniversityData.json";
 
+        private DataGridViewButtonColumn ctrlViewProfessorCourses;
+
+        #region
+
+
+
+        #endregion
+
         public SchedulerForm() {
             InitializeComponent();
         }
@@ -35,7 +43,17 @@ namespace WindowsFormsApp1.WUI {
         private void PopulateSchedulesDataGrid() {
             DataTable dataTable = new DataTable();
 
-            PopulateDataTableColumns(dataTable, typeof(Schedule));
+
+            dataTable.Columns.Add(new DataColumn("Id", typeof(Guid)));
+
+
+            dataTable.Columns.Add(new DataColumn("Course code", typeof(string)));
+            dataTable.Columns.Add(new DataColumn("Course subject", typeof(string)));
+            dataTable.Columns.Add(new DataColumn("Course duration", typeof(int)));
+            dataTable.Columns.Add(new DataColumn("Professor", typeof(string)));
+
+            dataTable.Columns.Add(new DataColumn("Calendar", typeof(string)));
+
 
 
             foreach (Schedule schedule in _CodingSchool.Schedules) {
@@ -44,9 +62,15 @@ namespace WindowsFormsApp1.WUI {
 
                 dataRow["Id"] = schedule.Id;
                 dataRow["Calendar"] = schedule.Calendar;
-                dataRow["CourseId"] = schedule.CourseId;
-                dataRow["ProfessorId"] = schedule.ProfessorId;
-                dataRow["StudentId"] = schedule.StudentId;
+                dataRow["Course code"] = _CodingSchool.Courses.Find(x => x.Id == schedule.CourseId).Code;
+                dataRow["Course subject"] = _CodingSchool.Courses.Find(x => x.Id == schedule.CourseId).Subject;
+
+                dataRow["Course duration"] = _CodingSchool.Courses.Find(x => x.Id == schedule.CourseId).Duration;
+
+                dataRow["Professor"] = _CodingSchool.Professors.Find(x => x.Id == schedule.ProfessorId).Name + "  " + _CodingSchool.Professors.Find(x => x.Id == schedule.ProfessorId).Surname;
+
+                //dataRow["Student"] = _CodingSchool.Students.Find(x => x.Id == schedule.StudentId).Name + "  " + _CodingSchool.Students.Find(x => x.Id == schedule.StudentId).Surname; ;
+
 
                 dataTable.Rows.Add(dataRow);
             }
@@ -93,7 +117,6 @@ namespace WindowsFormsApp1.WUI {
 
         }
 
-
         private void AddSchedule() {
 
             // TODO: 1. CANNOT ADD SAME STUDENT + PROFESSOR IN SAME DATE & HOUR
@@ -108,26 +131,49 @@ namespace WindowsFormsApp1.WUI {
             if (result == DialogResult.OK) {
 
 
-                if (ctrlCourses.SelectedRows.Count > 0 && ctrlProfessors.SelectedRows.Count > 0 && ctrlStudents.SelectedRows.Count > 0) {
+                if (ctrlCourses.SelectedRows.Count > 0 && ctrlProfessors.SelectedRows.Count > 0) {
 
 
 
-                    _CodingSchool.Schedules.Add(new Schedule() {
+                    //---------------------------------------------------------------------------------------
+                    Guid courseId = Guid.Parse(Convert.ToString(ctrlCourses.SelectedRows[0].Cells["Id"].Value));
 
-                        CourseId = Guid.Parse(Convert.ToString(ctrlCourses.SelectedRows[0].Cells["Id"].Value)),
+                    Guid profId = Guid.Parse(Convert.ToString(ctrlProfessors.SelectedRows[0].Cells["Id"].Value));
 
-                        ProfessorId = Guid.Parse(Convert.ToString(ctrlProfessors.SelectedRows[0].Cells["Id"].Value)),
 
-                        StudentId = Guid.Parse(Convert.ToString(ctrlStudents.SelectedRows[0].Cells["Id"].Value)),
+                    //---------------------------------------------------------------------------------------
 
-                        Calendar = ctrlCalendar.Value.ToString()
-                    });
+                    if (_CodingSchool.Schedules.Count == 0) {
 
-                    PopulateSchedulesDataGrid();
+                        _CodingSchool.Schedules.Add(new Schedule() {
 
-                    SerializeToJson(_CodingSchool);
+                            CourseId = courseId,
 
-                    //MessageBox.Show("OK");
+                            ProfessorId = profId,
+
+                            //StudentId = studId,
+
+                            Calendar = ctrlCalendar.Value.ToString()
+                        });
+
+                        PopulateSchedulesDataGrid();
+
+                        SerializeToJson(_CodingSchool);
+
+                        MessageBox.Show("OK");
+
+                    }
+                    else {
+
+                        MessageBox.Show("ERROR");
+                    }
+
+
+
+
+
+
+                    //----------------------------------------------------------------------------------------------
 
                 }
                 else {
@@ -137,13 +183,9 @@ namespace WindowsFormsApp1.WUI {
             }
         }
 
-
-
         private void ctrlExit_Click(object sender, EventArgs e) {
             Application.Exit();
         }
-
-
 
         private void ctrlAddSchedule_Click(object sender, EventArgs e) {
             AddSchedule();
@@ -188,170 +230,73 @@ namespace WindowsFormsApp1.WUI {
 
             PopulateCoursesDataGridView();
 
-            PopulateProfessorsDataGridView();
-
-            PopulateStudentsDataGridView();
 
         }
 
-        private void PopulateStudentsDataGridView() {
-            DataTable dataTable = new DataTable();
-
-            PopulateDataTableColumns(dataTable, typeof(Student));
-
-
-            foreach (Student student in _CodingSchool.Students) {
-
-                DataRow dataRow = dataTable.NewRow();
-
-                dataRow["Id"] = student.Id;
-                dataRow["Surname"] = student.Surname;
-                dataRow["Name"] = student.Name;
-                dataRow["Age"] = student.Age;
-                dataRow["RegistrationNumber"] = student.RegistrationNumber;
-
-                dataTable.Rows.Add(dataRow);
-            }
-
-            ctrlStudents.DataSource = dataTable;
+        private void PopulateProfessorsDataGridView(Guid selectedCourseId) {
 
 
 
-            DataGridViewButtonColumn ctrlViewStudentCourses = new DataGridViewButtonColumn();
-            ctrlViewStudentCourses.Name = "ViewCourses";
-            ctrlViewStudentCourses.Text = "View Courses";
-            //int columnIndex = 2;
-            if (ctrlStudents.Columns["ViewCourses"] == null) {
-                ctrlStudents.Columns.Insert(ctrlStudents.Columns.Count, ctrlViewStudentCourses);
-            }
+            DataTable professorsDataTable = new DataTable();
 
-            ctrlStudents.CellClick += ctrlStudents_CellClick;
+            professorsDataTable.Columns.Add(new DataColumn("Id", typeof(Guid)));
+            professorsDataTable.Columns.Add(new DataColumn("Name", typeof(string)));
+            professorsDataTable.Columns.Add(new DataColumn("Surname", typeof(string)));
+            professorsDataTable.Columns.Add(new DataColumn("Rank", typeof(ProfessorRank)));
+            professorsDataTable.Columns.Add(new DataColumn("Age", typeof(int)));
 
 
+            foreach (Professor professor in _CodingSchool.Professors.FindAll(x => x.Courses.Contains(_CodingSchool.Courses.Find(y => y.Id == selectedCourseId)))) {
 
-            ctrlStudents.Columns[0].Visible = false;
-        }
-
-
-        private void ctrlStudents_CellClick(object sender, DataGridViewCellEventArgs e) {
-            if (e.ColumnIndex == ctrlStudents.Columns["ViewCourses"].Index) {
-
-                Student student = _CodingSchool.Students.Find(x => x.Id == Guid.Parse(Convert.ToString(ctrlStudents.SelectedRows[0].Cells["Id"].Value)));
-
-                string studentCourses = string.Empty;
-
-                foreach (Course course in student.Courses) {
-
-                    studentCourses += string.Format("Code: {0} - Subject: {1} - Hours: {2}\n", course.Code, course.Subject, course.Hours);
-
-                }
-
-                MessageBox.Show(studentCourses);
-            }
-        }
-
-
-
-
-        private void PopulateProfessorsDataGridView() {
-            DataTable dataTable = new DataTable();
-
-            PopulateDataTableColumns(dataTable, typeof(Professor));
-
-            foreach (Professor professor in _CodingSchool.Professors) {
-
-                DataRow dataRow = dataTable.NewRow();
+                DataRow dataRow = professorsDataTable.NewRow();
 
                 dataRow["Id"] = professor.Id;
-                dataRow["Surname"] = professor.Surname;
                 dataRow["Name"] = professor.Name;
-                dataRow["Age"] = professor.Age;
+                dataRow["Surname"] = professor.Surname;
+
                 dataRow["Rank"] = professor.Rank;
+                dataRow["Age"] = professor.Age;
 
-                dataTable.Rows.Add(dataRow);
+
+                professorsDataTable.Rows.Add(dataRow);
             }
 
+            ctrlProfessors.DataSource = professorsDataTable;
 
 
 
-            ctrlProfessors.DataSource = dataTable;
 
+            if (!ctrlProfessors.Columns.Contains("ViewCourses")) {
 
-            //-----------------------------------------------------
+                ctrlViewProfessorCourses = new DataGridViewButtonColumn();
+                ctrlViewProfessorCourses.Name = "ViewCourses";
+                ctrlViewProfessorCourses.HeaderText = "View Courses";
+                ctrlViewProfessorCourses.UseColumnTextForButtonValue = true;
 
-            DataGridViewButtonColumn ctrlViewProfessorCourses = new DataGridViewButtonColumn();
-            ctrlViewProfessorCourses.Name = "ViewCourses";
-            ctrlViewProfessorCourses.HeaderText = "View Courses";
-            //int columnIndex = 2;
-            if (ctrlProfessors.Columns["ViewCourses"] == null) {
-                ctrlProfessors.Columns.Insert(ctrlProfessors.Columns.Count, ctrlViewProfessorCourses);
+                ctrlProfessors.Columns.Add(ctrlViewProfessorCourses);
             }
-
-            ctrlProfessors.CellClick += ctrlProfessors_CellClick;
-
-            //----------------------------------------------------
-
 
 
             ctrlProfessors.Columns[0].Visible = false;
 
 
-
-
-        }
-
-
-        private void ctrlProfessors_CellClick(object sender, DataGridViewCellEventArgs e) {
-            if (e.ColumnIndex == ctrlProfessors.Columns["ViewCourses"].Index) {
-
-                Professor professor = _CodingSchool.Professors.Find(x => x.Id == Guid.Parse(Convert.ToString(ctrlProfessors.SelectedRows[0].Cells["Id"].Value)));
-
-                string professorCourses = string.Empty;
-
-                foreach (Course course in professor.Courses) {
-
-                    professorCourses += string.Format("Code: {0} - Subject: {1} - Hours: {2}\n", course.Code, course.Subject, course.Hours);
-
-                }
-
-                MessageBox.Show(professorCourses);
-            }
-        }
-
-        private static void PopulateDataTableColumns(DataTable dataTable, Type type) {
-            dataTable.Columns.Add(new DataColumn("Id", typeof(Guid)));
-
-            PropertyInfo[] properties = null;
-
-            if (type == typeof(Professor)) {
-                properties = typeof(Professor).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-            }
-            else if (type == typeof(Course)) {
-                properties = typeof(Course).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-            }
-            else if (type == typeof(Student)) {
-                properties = typeof(Student).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-            }
-            else if (type == typeof(Schedule)) {
-                properties = typeof(Schedule).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-            }
-
-            foreach (PropertyInfo property in properties) {
-                if (property.Name != "Id") {
-
-                    dataTable.Columns.Add(new DataColumn(property.Name, property.PropertyType));
-                }
-            }
         }
 
         private void PopulateCoursesDataGridView() {
             DataTable dataTable = new DataTable();
 
-            PopulateDataTableColumns(dataTable, typeof(Course));
+            //PopulateDataTableColumns(dataTable, typeof(Course));
+
+
+
+            dataTable.Columns.Add(new DataColumn("Id", typeof(Guid)));
+            dataTable.Columns.Add(new DataColumn("Code", typeof(string)));
+            dataTable.Columns.Add(new DataColumn("Subject", typeof(string)));
+            dataTable.Columns.Add(new DataColumn("Duration", typeof(int)));
+            dataTable.Columns.Add(new DataColumn("Category", typeof(CourseCategory)));
+
+
+
 
 
             foreach (Course course in _CodingSchool.Courses) {
@@ -361,7 +306,7 @@ namespace WindowsFormsApp1.WUI {
                 dataRow["Id"] = course.Id;
                 dataRow["Code"] = course.Code;
                 dataRow["Subject"] = course.Subject;
-                dataRow["Hours"] = course.Hours;
+                dataRow["Duration"] = course.Duration;
                 dataRow["Category"] = course.Category;
 
                 dataTable.Rows.Add(dataRow);
@@ -380,6 +325,39 @@ namespace WindowsFormsApp1.WUI {
             //    return;
             //}
         }
+
+        private void ctrlCourses_SelectionChanged(object sender, EventArgs e) {
+
+            Guid selectedCourseId = Guid.Parse(Convert.ToString(ctrlCourses.SelectedRows[0].Cells["Id"].Value));
+
+            if (ctrlProfessors.Columns.Contains("ViewCourses")) {
+                ctrlProfessors.Columns.Remove(ctrlViewProfessorCourses);
+            }
+
+
+            PopulateProfessorsDataGridView(selectedCourseId);
+
+
+
+        }
+
+        private void ctrlProfessors_CellClick(object sender, DataGridViewCellEventArgs e) {
+            if (e.ColumnIndex == ctrlProfessors.Columns["ViewCourses"].Index) {
+
+                Professor professor = _CodingSchool.Professors.Find(x => x.Id == Guid.Parse(Convert.ToString(ctrlProfessors.SelectedRows[0].Cells["Id"].Value)));
+
+                string professorCourses = string.Empty;
+
+                foreach (Course course in professor.Courses) {
+
+                    professorCourses += string.Format("Code: {0} - Subject: {1} - Hours: {2}\n", course.Code, course.Subject, course.Duration);
+
+                }
+
+                MessageBox.Show(professorCourses);
+            }
+        }
     }
+
 }
 

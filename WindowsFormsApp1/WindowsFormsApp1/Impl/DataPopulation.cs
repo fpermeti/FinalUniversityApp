@@ -13,35 +13,35 @@ namespace WindowsFormsApp1.Impl {
                 Code = "01",
                 Subject = "Quantum Physics",
                 Category = CourseCategory.Physics,
-                Hours = 10
+                Duration = 50
             });
 
             codingSchool.Courses.Add(new Course() {
                 Code = "02",
                 Subject = "Electo-Dynamics",
                 Category = CourseCategory.Physics,
-                Hours = 30
+                Duration = 60
             });
 
             codingSchool.Courses.Add(new Course() {
                 Code = "03",
                 Subject = "Basic Chemistry",
                 Category = CourseCategory.Chemistry,
-                Hours = 50
+                Duration = 70
             });
 
             codingSchool.Courses.Add(new Course() {
                 Code = "04",
                 Subject = "Financial II",
                 Category = CourseCategory.Financial,
-                Hours = 70
+                Duration = 80
             });
 
             codingSchool.Courses.Add(new Course() {
                 Code = "05",
                 Subject = "Mathematics I",
                 Category = CourseCategory.Mathematics,
-                Hours = 90
+                Duration = 90
             });
 
             codingSchool.Students.Add(new Student() {
@@ -82,7 +82,7 @@ namespace WindowsFormsApp1.Impl {
                 Surname = "Papadopoulos",
                 Age = 48,
                 Rank = ProfessorRank.Associate,
-                Courses = new List<Course>() { codingSchool.Courses.FirstOrDefault(x => x.Code == "04"), codingSchool.Courses.FirstOrDefault(x => x.Code == "02") }
+                Courses = new List<Course>() { codingSchool.Courses.FirstOrDefault(x => x.Code == "01"), codingSchool.Courses.FirstOrDefault(x => x.Code == "02") }
 
             });
 

@@ -7,7 +7,7 @@ namespace WindowsFormsApp1.Impl {
 
         public string Subject { get; set; }
 
-        public int Hours { get; set; }
+        public int Duration { get; set; }
 
         public CourseCategory Category { get; set; }
 

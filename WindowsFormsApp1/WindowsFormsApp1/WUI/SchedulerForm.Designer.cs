@@ -33,17 +33,14 @@ namespace WindowsFormsApp1.WUI {
             this.ctrlCalendar = new System.Windows.Forms.DateTimePicker();
             this.lblCourses = new System.Windows.Forms.Label();
             this.lblProfessors = new System.Windows.Forms.Label();
-            this.lblStudents = new System.Windows.Forms.Label();
             this.ctrlCourses = new System.Windows.Forms.DataGridView();
             this.ctrlProfessors = new System.Windows.Forms.DataGridView();
-            this.ctrlStudents = new System.Windows.Forms.DataGridView();
             this.ctrlSchedules = new System.Windows.Forms.DataGridView();
             this.lblSchedules = new System.Windows.Forms.Label();
             this.lblCalendar = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ctrlCourses)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ctrlProfessors)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ctrlStudents)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ctrlSchedules)).BeginInit();
             this.SuspendLayout();
             // 
@@ -72,7 +69,7 @@ namespace WindowsFormsApp1.WUI {
             this.ctrlTitle.AutoSize = true;
             this.ctrlTitle.Font = new System.Drawing.Font("Calibri", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.ctrlTitle.ForeColor = System.Drawing.Color.SaddleBrown;
-            this.ctrlTitle.Location = new System.Drawing.Point(368, 45);
+            this.ctrlTitle.Location = new System.Drawing.Point(93, 28);
             this.ctrlTitle.Name = "ctrlTitle";
             this.ctrlTitle.Size = new System.Drawing.Size(538, 54);
             this.ctrlTitle.TabIndex = 13;
@@ -85,7 +82,7 @@ namespace WindowsFormsApp1.WUI {
             this.ctrlFile});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1243, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(786, 28);
             this.menuStrip1.TabIndex = 15;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -94,7 +91,7 @@ namespace WindowsFormsApp1.WUI {
             this.ctrlFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ctrlExit});
             this.ctrlFile.Name = "ctrlFile";
-            this.ctrlFile.Size = new System.Drawing.Size(46, 26);
+            this.ctrlFile.Size = new System.Drawing.Size(46, 24);
             this.ctrlFile.Text = "File";
             // 
             // ctrlExit
@@ -107,7 +104,7 @@ namespace WindowsFormsApp1.WUI {
             // ctrlCalendar
             // 
             this.ctrlCalendar.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.ctrlCalendar.Location = new System.Drawing.Point(106, 332);
+            this.ctrlCalendar.Location = new System.Drawing.Point(163, 332);
             this.ctrlCalendar.Name = "ctrlCalendar";
             this.ctrlCalendar.Size = new System.Drawing.Size(200, 22);
             this.ctrlCalendar.TabIndex = 16;
@@ -118,27 +115,18 @@ namespace WindowsFormsApp1.WUI {
             this.lblCourses.AutoSize = true;
             this.lblCourses.Location = new System.Drawing.Point(12, 113);
             this.lblCourses.Name = "lblCourses";
-            this.lblCourses.Size = new System.Drawing.Size(94, 17);
+            this.lblCourses.Size = new System.Drawing.Size(150, 17);
             this.lblCourses.TabIndex = 17;
-            this.lblCourses.Text = "Select course";
+            this.lblCourses.Text = "STEP 1: Select course";
             // 
             // lblProfessors
             // 
             this.lblProfessors.AutoSize = true;
-            this.lblProfessors.Location = new System.Drawing.Point(424, 113);
+            this.lblProfessors.Location = new System.Drawing.Point(400, 113);
             this.lblProfessors.Name = "lblProfessors";
-            this.lblProfessors.Size = new System.Drawing.Size(111, 17);
+            this.lblProfessors.Size = new System.Drawing.Size(167, 17);
             this.lblProfessors.TabIndex = 18;
-            this.lblProfessors.Text = "Select professor";
-            // 
-            // lblStudents
-            // 
-            this.lblStudents.AutoSize = true;
-            this.lblStudents.Location = new System.Drawing.Point(843, 113);
-            this.lblStudents.Name = "lblStudents";
-            this.lblStudents.Size = new System.Drawing.Size(98, 17);
-            this.lblStudents.TabIndex = 19;
-            this.lblStudents.Text = "Select student";
+            this.lblProfessors.Text = "STEP 2: Select professor";
             // 
             // ctrlCourses
             // 
@@ -155,6 +143,7 @@ namespace WindowsFormsApp1.WUI {
             this.ctrlCourses.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.ctrlCourses.Size = new System.Drawing.Size(369, 186);
             this.ctrlCourses.TabIndex = 20;
+            this.ctrlCourses.SelectionChanged += new System.EventHandler(this.ctrlCourses_SelectionChanged);
             // 
             // ctrlProfessors
             // 
@@ -162,7 +151,7 @@ namespace WindowsFormsApp1.WUI {
             this.ctrlProfessors.AllowUserToDeleteRows = false;
             this.ctrlProfessors.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.ctrlProfessors.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.ctrlProfessors.Location = new System.Drawing.Point(427, 133);
+            this.ctrlProfessors.Location = new System.Drawing.Point(403, 133);
             this.ctrlProfessors.MultiSelect = false;
             this.ctrlProfessors.Name = "ctrlProfessors";
             this.ctrlProfessors.ReadOnly = true;
@@ -171,22 +160,7 @@ namespace WindowsFormsApp1.WUI {
             this.ctrlProfessors.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.ctrlProfessors.Size = new System.Drawing.Size(369, 186);
             this.ctrlProfessors.TabIndex = 21;
-            // 
-            // ctrlStudents
-            // 
-            this.ctrlStudents.AllowUserToAddRows = false;
-            this.ctrlStudents.AllowUserToDeleteRows = false;
-            this.ctrlStudents.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            this.ctrlStudents.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.ctrlStudents.Location = new System.Drawing.Point(846, 133);
-            this.ctrlStudents.MultiSelect = false;
-            this.ctrlStudents.Name = "ctrlStudents";
-            this.ctrlStudents.ReadOnly = true;
-            this.ctrlStudents.RowHeadersWidth = 51;
-            this.ctrlStudents.RowTemplate.Height = 24;
-            this.ctrlStudents.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.ctrlStudents.Size = new System.Drawing.Size(369, 186);
-            this.ctrlStudents.TabIndex = 22;
+            this.ctrlProfessors.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ctrlProfessors_CellClick);
             // 
             // ctrlSchedules
             // 
@@ -201,7 +175,7 @@ namespace WindowsFormsApp1.WUI {
             this.ctrlSchedules.RowHeadersWidth = 51;
             this.ctrlSchedules.RowTemplate.Height = 24;
             this.ctrlSchedules.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.ctrlSchedules.Size = new System.Drawing.Size(1200, 186);
+            this.ctrlSchedules.Size = new System.Drawing.Size(757, 186);
             this.ctrlSchedules.TabIndex = 23;
             // 
             // lblSchedules
@@ -218,20 +192,18 @@ namespace WindowsFormsApp1.WUI {
             this.lblCalendar.AutoSize = true;
             this.lblCalendar.Location = new System.Drawing.Point(12, 337);
             this.lblCalendar.Name = "lblCalendar";
-            this.lblCalendar.Size = new System.Drawing.Size(79, 17);
+            this.lblCalendar.Size = new System.Drawing.Size(135, 17);
             this.lblCalendar.TabIndex = 25;
-            this.lblCalendar.Text = "Select date";
+            this.lblCalendar.Text = "STEP 3: Select date";
             // 
             // SchedulerForm
             // 
-            this.ClientSize = new System.Drawing.Size(1243, 666);
+            this.ClientSize = new System.Drawing.Size(786, 666);
             this.Controls.Add(this.lblCalendar);
             this.Controls.Add(this.lblSchedules);
             this.Controls.Add(this.ctrlSchedules);
-            this.Controls.Add(this.ctrlStudents);
             this.Controls.Add(this.ctrlProfessors);
             this.Controls.Add(this.ctrlCourses);
-            this.Controls.Add(this.lblStudents);
             this.Controls.Add(this.lblProfessors);
             this.Controls.Add(this.lblCourses);
             this.Controls.Add(this.ctrlCalendar);
@@ -247,7 +219,6 @@ namespace WindowsFormsApp1.WUI {
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ctrlCourses)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ctrlProfessors)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ctrlStudents)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ctrlSchedules)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -264,10 +235,8 @@ namespace WindowsFormsApp1.WUI {
         private System.Windows.Forms.DateTimePicker ctrlCalendar;
         private System.Windows.Forms.Label lblCourses;
         private System.Windows.Forms.Label lblProfessors;
-        private System.Windows.Forms.Label lblStudents;
         private System.Windows.Forms.DataGridView ctrlCourses;
         private System.Windows.Forms.DataGridView ctrlProfessors;
-        private System.Windows.Forms.DataGridView ctrlStudents;
         private System.Windows.Forms.DataGridView ctrlSchedules;
         private System.Windows.Forms.Label lblSchedules;
         private System.Windows.Forms.Label lblCalendar;
