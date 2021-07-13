@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace WindowsFormsApp1.Impl {
+
     public class Person : Entity {
 
         public string Name { get; set; }
@@ -14,6 +15,5 @@ namespace WindowsFormsApp1.Impl {
         public int Age { get; set; }
 
         public List<Course> Courses { get; set; }
-
     }
 }

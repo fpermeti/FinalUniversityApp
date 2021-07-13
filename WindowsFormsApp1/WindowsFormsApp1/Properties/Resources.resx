@@ -117,8 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="token_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\token_1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Warning1" xml:space="preserve">
+    <value>Cannot schedule the course because:
+
+The selected professor either has already been
+assigned to 4 courses for this day or 
+you are trying to reasign them again in the same hour of day.</value>
+  </data>
+  <data name="Warning2" xml:space="preserve">
+    <value>Courses can only be scheduled between 08:00 and 19:00
+on weekdays, at least 1 minute before the course begins.</value>
+  </data>
+  <data name="Warning3" xml:space="preserve">
+    <value>Cannot schedule the course because:
+   
+The selected course has not been selected by any students.</value>
   </data>
 </root>

@@ -61,12 +61,36 @@ namespace WindowsFormsApp1.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        ///   Looks up a localized string similar to Cannot schedule the course because:
+        ///
+        ///The selected professor either has already been
+        ///assigned to 4 courses for this day or 
+        ///you are trying to reasign them again in the same hour of day..
         /// </summary>
-        internal static System.Drawing.Bitmap token_1 {
+        internal static string Warning1 {
             get {
-                object obj = ResourceManager.GetObject("token_1", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ResourceManager.GetString("Warning1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Courses can only be scheduled between 08:00 and 19:00
+        ///on weekdays, at least 1 minute before the course begins..
+        /// </summary>
+        internal static string Warning2 {
+            get {
+                return ResourceManager.GetString("Warning2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot schedule the course because:
+        ///   
+        ///The selected course has not been selected by any students..
+        /// </summary>
+        internal static string Warning3 {
+            get {
+                return ResourceManager.GetString("Warning3", resourceCulture);
             }
         }
     }

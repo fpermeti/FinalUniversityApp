@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
 using WindowsFormsApp1.Impl;
+using WindowsFormsApp1.Properties;
 
 namespace WindowsFormsApp1.WUI {
 
@@ -15,173 +17,28 @@ namespace WindowsFormsApp1.WUI {
 
         private University _CodingSchool;
 
-        private const string _JsonFile = "UniversityData.json";
+        private DataGridViewButtonColumn _CtrlViewProfessorCourses;
 
-        private DataGridViewButtonColumn ctrlViewProfessorCourses;
+        private JsonHander _JsonHandler;
 
-        #region
+        private Schedule _Schedule;
 
+        private Course _Course;
 
-
-        #endregion
+        private Professor _Professor;
 
         public SchedulerForm() {
+
             InitializeComponent();
+
+            _Schedule = new Schedule();
+
+            _Course = new Course();
+
+            _Professor = new Professor();
         }
 
-        private void PopulateListBoxes() {
-
-
-            if (_CodingSchool.Professors.Count == 0 || _CodingSchool.Students.Count == 0 || _CodingSchool.Courses.Count == 0) {
-
-                DataPopulation.CreateDummyData(_CodingSchool);
-            }
-
-            PopulateSchedulesDataGrid();
-        }
-
-        private void PopulateSchedulesDataGrid() {
-            DataTable dataTable = new DataTable();
-
-
-            dataTable.Columns.Add(new DataColumn("Id", typeof(Guid)));
-
-
-            dataTable.Columns.Add(new DataColumn("Course code", typeof(string)));
-            dataTable.Columns.Add(new DataColumn("Course subject", typeof(string)));
-            dataTable.Columns.Add(new DataColumn("Course duration", typeof(int)));
-            dataTable.Columns.Add(new DataColumn("Professor", typeof(string)));
-
-            dataTable.Columns.Add(new DataColumn("Calendar", typeof(string)));
-
-
-
-            foreach (Schedule schedule in _CodingSchool.Schedules) {
-
-                DataRow dataRow = dataTable.NewRow();
-
-                dataRow["Id"] = schedule.Id;
-                dataRow["Calendar"] = schedule.Calendar;
-                dataRow["Course code"] = _CodingSchool.Courses.Find(x => x.Id == schedule.CourseId).Code;
-                dataRow["Course subject"] = _CodingSchool.Courses.Find(x => x.Id == schedule.CourseId).Subject;
-
-                dataRow["Course duration"] = _CodingSchool.Courses.Find(x => x.Id == schedule.CourseId).Duration;
-
-                dataRow["Professor"] = _CodingSchool.Professors.Find(x => x.Id == schedule.ProfessorId).Name + "  " + _CodingSchool.Professors.Find(x => x.Id == schedule.ProfessorId).Surname;
-
-                //dataRow["Student"] = _CodingSchool.Students.Find(x => x.Id == schedule.StudentId).Name + "  " + _CodingSchool.Students.Find(x => x.Id == schedule.StudentId).Surname; ;
-
-
-                dataTable.Rows.Add(dataRow);
-            }
-
-            ctrlSchedules.DataSource = dataTable;
-            ctrlSchedules.Columns[0].Visible = false;
-        }
-
-        private void DeserializeFromJson() {
-
-            JavaScriptSerializer serializer = new JavaScriptSerializer();
-
-            string path = Path.Combine(Environment.CurrentDirectory, _JsonFile);
-
-            string data = string.Empty;
-
-            if (File.Exists(path)) {
-
-                data = File.ReadAllText(path);
-
-                _CodingSchool = serializer.Deserialize<University>(data);
-            }
-            else {
-
-                File.Create(path).Dispose();
-
-                _CodingSchool = new University();
-
-                SerializeToJson(_CodingSchool);
-            }
-        }
-
-        private void SerializeToJson(object objectToBeSerialized) {
-
-            JavaScriptSerializer serializer = new JavaScriptSerializer();
-
-            string data = serializer.Serialize(objectToBeSerialized);
-
-            string path = Path.Combine(Environment.CurrentDirectory, _JsonFile);
-
-            File.WriteAllText(path, data);
-
-            //MessageBox.Show("OK");
-
-        }
-
-        private void AddSchedule() {
-
-            // TODO: 1. CANNOT ADD SAME STUDENT + PROFESSOR IN SAME DATE & HOUR
-
-            // TODO: 2. EACH STUDENT CANNOT HAVE MORE THAN 3 COURSES PER DAY!
-
-            // TODO: 3. A PROFESSOR CANNOT TEACH MORE THAN 4 COURSES PER DAY AND 40 COURSES PER WEEK
-
-
-            DialogResult result = MessageBox.Show("Are you sure you want to create this entry ?", "Warning", MessageBoxButtons.OKCancel);
-
-            if (result == DialogResult.OK) {
-
-
-                if (ctrlCourses.SelectedRows.Count > 0 && ctrlProfessors.SelectedRows.Count > 0) {
-
-
-
-                    //---------------------------------------------------------------------------------------
-                    Guid courseId = Guid.Parse(Convert.ToString(ctrlCourses.SelectedRows[0].Cells["Id"].Value));
-
-                    Guid profId = Guid.Parse(Convert.ToString(ctrlProfessors.SelectedRows[0].Cells["Id"].Value));
-
-
-                    //---------------------------------------------------------------------------------------
-
-                    if (_CodingSchool.Schedules.Count == 0) {
-
-                        _CodingSchool.Schedules.Add(new Schedule() {
-
-                            CourseId = courseId,
-
-                            ProfessorId = profId,
-
-                            //StudentId = studId,
-
-                            Calendar = ctrlCalendar.Value.ToString()
-                        });
-
-                        PopulateSchedulesDataGrid();
-
-                        SerializeToJson(_CodingSchool);
-
-                        MessageBox.Show("OK");
-
-                    }
-                    else {
-
-                        MessageBox.Show("ERROR");
-                    }
-
-
-
-
-
-
-                    //----------------------------------------------------------------------------------------------
-
-                }
-                else {
-
-                    MessageBox.Show("Please select an item in each list");
-                }
-            }
-        }
+        #region Form Events
 
         private void ctrlExit_Click(object sender, EventArgs e) {
             Application.Exit();
@@ -189,14 +46,103 @@ namespace WindowsFormsApp1.WUI {
 
         private void ctrlAddSchedule_Click(object sender, EventArgs e) {
             AddSchedule();
-
         }
 
         private void ctrlRemoveSchedule_Click(object sender, EventArgs e) {
+            RemoveSchedule();
+        }
+
+        private void SchedulerForm_Load(object sender, EventArgs e) {
+            Configurations();
+        }
+
+        private void ctrlProfessors_CellClick(object sender, DataGridViewCellEventArgs e) {
+            ViewProfessorCourses(e);
+        }
+
+        private void ctrlCourses_SelectionChanged(object sender, EventArgs e) {
+            ViewProfessorsThatIncludeSelectedCourse();
+        }
+
+        #endregion
+
+        private void AddSchedule() {
+
+            DialogResult result = MessageBox.Show("Are you sure you want to create this entry ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+
+            if (result == DialogResult.OK) {
+
+                if (ctrlCalendar.Value.Hour < 8 || 19 < ctrlCalendar.Value.Hour || (ctrlCalendar.Value.Hour == DateTime.Now.Hour && ctrlCalendar.Value.Day == DateTime.Now.Day) || ctrlCalendar.Value.DayOfWeek == DayOfWeek.Saturday || ctrlCalendar.Value.DayOfWeek == DayOfWeek.Sunday) {
+
+                    MessageBox.Show(Resources.Warning2, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (ctrlCourses.SelectedRows.Count > 0 && ctrlProfessors.SelectedRows.Count > 0) {
+
+                    Guid selectedCourseId = Guid.Parse(Convert.ToString(ctrlCourses.SelectedRows[0].Cells["Id"].Value));
+
+                    Guid selectedProfessorId = Guid.Parse(Convert.ToString(ctrlProfessors.SelectedRows[0].Cells["Id"].Value));
+
+                    DateTime calendar = ctrlCalendar.Value;
+
+                    List<Schedule> howManySchedulesIncludeSelectedProfessorInASpecificDay = _CodingSchool.Schedules.FindAll(x => x.ProfessorId == selectedProfessorId && Convert.ToDateTime(x.Calendar).Day == calendar.Day);
+
+                    List<Student> studentsThatIncludeTheSelectedCourseInTheirCourses = new List<Student>();
+
+                    foreach (Student student in _CodingSchool.Students) {
+
+                        foreach (Course course in student.Courses) {
+
+                            if (course.Id == selectedCourseId) {
+                                studentsThatIncludeTheSelectedCourseInTheirCourses.Add(student);
+                                break;
+                            }
+                        }
+                    }
+
+                    if (studentsThatIncludeTheSelectedCourseInTheirCourses.Count == 0) {
+                        MessageBox.Show(Resources.Warning3, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    List<Schedule> coursesThatAreScheduledToTheSameProfessorInTheSameTime = _CodingSchool.Schedules.FindAll(x => x.ProfessorId == selectedProfessorId && Convert.ToDateTime(x.Calendar).Day == calendar.Day && Convert.ToDateTime(x.Calendar).Hour == calendar.Hour);
+
+                    if (coursesThatAreScheduledToTheSameProfessorInTheSameTime.Count == 0 && howManySchedulesIncludeSelectedProfessorInASpecificDay.Count <= 3 && studentsThatIncludeTheSelectedCourseInTheirCourses.Count > 0) {
+
+                        _CodingSchool.Schedules.Add(new Schedule() {
+
+                            CourseId = selectedCourseId,
+
+                            ProfessorId = selectedProfessorId,
+
+                            Calendar = Convert.ToString(new DateTime(calendar.Year, calendar.Month, calendar.Day, calendar.Hour, 0, 0))
+                        });
+
+                        ctrlSchedules.Columns.Clear();
+                        ctrlSchedules.DataSource = _Schedule.PopulateSchedulesDataGridView(_CodingSchool);
+                        ctrlSchedules.Columns[0].Visible = false;
+
+                        _JsonHandler.SerializeToJson(_CodingSchool);
+
+                        MessageBox.Show("The course was successfully scheduled.");
+                    }
+                    else {
+                        MessageBox.Show(Resources.Warning1, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+                else {
+
+                    MessageBox.Show("Please select an item in each list.");
+                }
+            }
+        }
+
+        private void RemoveSchedule() {
 
             if (ctrlSchedules.SelectedRows.Count > 0) {
 
-                DialogResult result = MessageBox.Show("Are you sure you want to delete this entry ?", "Warning", MessageBoxButtons.OKCancel);
+                DialogResult result = MessageBox.Show("Are you sure you want to delete this entry ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
 
                 if (result == DialogResult.OK) {
 
@@ -206,142 +152,34 @@ namespace WindowsFormsApp1.WUI {
                         ctrlSchedules.Rows.RemoveAt(dataGridViewRow.Index);
                     }
 
-                    SerializeToJson(_CodingSchool);
+                    _JsonHandler.SerializeToJson(_CodingSchool);
                 }
             }
             else {
 
                 MessageBox.Show("You have to select a specific row.");
             }
-
         }
 
-        private void SchedulerForm_Load(object sender, EventArgs e) {
+        private void Configurations() {
 
-            ctrlCalendar.Format = DateTimePickerFormat.Custom;
-            ctrlCalendar.CustomFormat = "dd-MM-yyyy HH:MM";
+            _JsonHandler = new JsonHander();
 
+            _CodingSchool = _JsonHandler.DeserializeFromJson();
 
-            ctrlCalendar.MinDate = DateTime.Now;
+            ctrlCalendar.MinDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour + 1, DateTime.Now.Minute, DateTime.Now.Second);
 
-            DeserializeFromJson();
+            ctrlSchedules.Columns.Clear();
+            ctrlSchedules.DataSource = _Schedule.PopulateSchedulesDataGridView(_CodingSchool);
+            ctrlSchedules.Columns[0].Visible = false;
 
-            PopulateListBoxes();
-
-            PopulateCoursesDataGridView();
-
-
-        }
-
-        private void PopulateProfessorsDataGridView(Guid selectedCourseId) {
-
-
-
-            DataTable professorsDataTable = new DataTable();
-
-            professorsDataTable.Columns.Add(new DataColumn("Id", typeof(Guid)));
-            professorsDataTable.Columns.Add(new DataColumn("Name", typeof(string)));
-            professorsDataTable.Columns.Add(new DataColumn("Surname", typeof(string)));
-            professorsDataTable.Columns.Add(new DataColumn("Rank", typeof(ProfessorRank)));
-            professorsDataTable.Columns.Add(new DataColumn("Age", typeof(int)));
-
-
-            foreach (Professor professor in _CodingSchool.Professors.FindAll(x => x.Courses.Contains(_CodingSchool.Courses.Find(y => y.Id == selectedCourseId)))) {
-
-                DataRow dataRow = professorsDataTable.NewRow();
-
-                dataRow["Id"] = professor.Id;
-                dataRow["Name"] = professor.Name;
-                dataRow["Surname"] = professor.Surname;
-
-                dataRow["Rank"] = professor.Rank;
-                dataRow["Age"] = professor.Age;
-
-
-                professorsDataTable.Rows.Add(dataRow);
-            }
-
-            ctrlProfessors.DataSource = professorsDataTable;
-
-
-
-
-            if (!ctrlProfessors.Columns.Contains("ViewCourses")) {
-
-                ctrlViewProfessorCourses = new DataGridViewButtonColumn();
-                ctrlViewProfessorCourses.Name = "ViewCourses";
-                ctrlViewProfessorCourses.HeaderText = "View Courses";
-                ctrlViewProfessorCourses.UseColumnTextForButtonValue = true;
-
-                ctrlProfessors.Columns.Add(ctrlViewProfessorCourses);
-            }
-
-
-            ctrlProfessors.Columns[0].Visible = false;
-
-
-        }
-
-        private void PopulateCoursesDataGridView() {
-            DataTable dataTable = new DataTable();
-
-            //PopulateDataTableColumns(dataTable, typeof(Course));
-
-
-
-            dataTable.Columns.Add(new DataColumn("Id", typeof(Guid)));
-            dataTable.Columns.Add(new DataColumn("Code", typeof(string)));
-            dataTable.Columns.Add(new DataColumn("Subject", typeof(string)));
-            dataTable.Columns.Add(new DataColumn("Duration", typeof(int)));
-            dataTable.Columns.Add(new DataColumn("Category", typeof(CourseCategory)));
-
-
-
-
-
-            foreach (Course course in _CodingSchool.Courses) {
-
-                DataRow dataRow = dataTable.NewRow();
-
-                dataRow["Id"] = course.Id;
-                dataRow["Code"] = course.Code;
-                dataRow["Subject"] = course.Subject;
-                dataRow["Duration"] = course.Duration;
-                dataRow["Category"] = course.Category;
-
-                dataTable.Rows.Add(dataRow);
-            }
-
-            ctrlCourses.DataSource = dataTable;
+            ctrlCourses.Columns.Clear();
+            ctrlCourses.DataSource = _Course.PopulateCoursesDataGridView(_CodingSchool);
             ctrlCourses.Columns[0].Visible = false;
         }
 
-        private void ctrlCalendar_ValueChanged(object sender, EventArgs e) {
+        private void ViewProfessorCourses(DataGridViewCellEventArgs e) {
 
-            //System.DayOfWeek i = ctrlCalendar.Value.DayOfWeek;
-            //if ((i == System.DayOfWeek.Sunday) || (i == System.DayOfWeek.Saturday)) {
-            //    MessageBox.Show("Please try again, can't select a weekend day");
-            //    ctrlCalendar.Value = DateTime.Now;
-            //    return;
-            //}
-        }
-
-        private void ctrlCourses_SelectionChanged(object sender, EventArgs e) {
-
-            Guid selectedCourseId = Guid.Parse(Convert.ToString(ctrlCourses.SelectedRows[0].Cells["Id"].Value));
-
-            if (ctrlProfessors.Columns.Contains("ViewCourses")) {
-                ctrlProfessors.Columns.Remove(ctrlViewProfessorCourses);
-            }
-
-
-            PopulateProfessorsDataGridView(selectedCourseId);
-
-
-
-        }
-
-        private void ctrlProfessors_CellClick(object sender, DataGridViewCellEventArgs e) {
             if (e.ColumnIndex == ctrlProfessors.Columns["ViewCourses"].Index) {
 
                 Professor professor = _CodingSchool.Professors.Find(x => x.Id == Guid.Parse(Convert.ToString(ctrlProfessors.SelectedRows[0].Cells["Id"].Value)));
@@ -351,13 +189,33 @@ namespace WindowsFormsApp1.WUI {
                 foreach (Course course in professor.Courses) {
 
                     professorCourses += string.Format("Code: {0} - Subject: {1} - Hours: {2}\n", course.Code, course.Subject, course.Duration);
-
                 }
 
-                MessageBox.Show(professorCourses);
+                MessageBox.Show(string.Format("Courses that {0} {1} is able to teach:\n\n{2}", professor.Name, professor.Surname, professorCourses), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
+
+        private void ViewProfessorsThatIncludeSelectedCourse() {
+
+            Guid selectedCourseId = Guid.Parse(Convert.ToString(ctrlCourses.SelectedRows[0].Cells["Id"].Value));
+
+            if (ctrlProfessors.Columns.Contains("ViewCourses")) {
+                ctrlProfessors.Columns.Remove(_CtrlViewProfessorCourses);
+            }
+
+            ctrlProfessors.Columns.Clear();
+            ctrlProfessors.DataSource = _Professor.PopulateProfessorsDataGridView(selectedCourseId, _CodingSchool);
+
+            if (!ctrlProfessors.Columns.Contains("ViewCourses")) {
+
+                _CtrlViewProfessorCourses = new DataGridViewButtonColumn();
+                _CtrlViewProfessorCourses.Name = "ViewCourses";
+                _CtrlViewProfessorCourses.HeaderText = "View Courses";
+                _CtrlViewProfessorCourses.UseColumnTextForButtonValue = true;
+                ctrlProfessors.Columns.Add(_CtrlViewProfessorCourses);
+            }
+
+            ctrlProfessors.Columns[0].Visible = false;
+        }
     }
-
 }
-

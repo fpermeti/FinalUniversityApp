@@ -16,17 +16,11 @@ namespace WindowsFormsApp1.Impl {
 
         public List<Schedule> Schedules { get; set; }
 
-
-
         public University() {
             Students = new List<Student>();
             Professors = new List<Professor>();
             Courses = new List<Course>();
             Schedules = new List<Schedule>();
         }
-
-
     }
-
 }
-

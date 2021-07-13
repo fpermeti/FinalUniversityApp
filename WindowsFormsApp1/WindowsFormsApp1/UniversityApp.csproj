@@ -56,6 +56,7 @@
     <Compile Include="Impl\DataPopulation.cs" />
     <Compile Include="Impl\Entity.cs" />
     <Compile Include="Impl\Enums.cs" />
+    <Compile Include="Impl\JsonHander.cs" />
     <Compile Include="Impl\Person.cs" />
     <Compile Include="Impl\Student.cs" />
     <Compile Include="Impl\Professor.cs" />
@@ -95,9 +96,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\token_1.png" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

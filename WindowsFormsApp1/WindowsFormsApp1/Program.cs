@@ -8,7 +8,6 @@ using WindowsFormsApp1.WUI;
 
 namespace WindowsFormsApp1 {
 
-
     static class Program {
 
         /// <summary>
@@ -17,11 +16,9 @@ namespace WindowsFormsApp1 {
         [STAThread]
         static void Main() {
 
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new SchedulerForm());
-
         }
     }
 }
