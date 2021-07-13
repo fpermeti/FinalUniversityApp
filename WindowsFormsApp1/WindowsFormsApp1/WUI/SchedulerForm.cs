@@ -125,7 +125,7 @@ namespace WindowsFormsApp1.WUI {
 
                         _JsonHandler.SerializeToJson(_CodingSchool);
 
-                        MessageBox.Show("The course was successfully scheduled.");
+                        MessageBox.Show(string.Format("The course was successfully scheduled."), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else {
                         MessageBox.Show(Resources.Warning1, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -133,7 +133,7 @@ namespace WindowsFormsApp1.WUI {
                 }
                 else {
 
-                    MessageBox.Show("Please select an item in each list.");
+                    MessageBox.Show(string.Format("Please select an item in each list."), "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
         }
@@ -157,7 +157,7 @@ namespace WindowsFormsApp1.WUI {
             }
             else {
 
-                MessageBox.Show("You have to select a specific row.");
+                MessageBox.Show(string.Format("You have to select a specific row."), "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -197,25 +197,28 @@ namespace WindowsFormsApp1.WUI {
 
         private void ViewProfessorsThatIncludeSelectedCourse() {
 
-            Guid selectedCourseId = Guid.Parse(Convert.ToString(ctrlCourses.SelectedRows[0].Cells["Id"].Value));
+            if (ctrlCourses.SelectedRows.Count > 0) {
 
-            if (ctrlProfessors.Columns.Contains("ViewCourses")) {
-                ctrlProfessors.Columns.Remove(_CtrlViewProfessorCourses);
+                Guid selectedCourseId = Guid.Parse(Convert.ToString(ctrlCourses.SelectedRows[0].Cells["Id"].Value));
+
+                if (ctrlProfessors.Columns.Contains("ViewCourses")) {
+                    ctrlProfessors.Columns.Remove(_CtrlViewProfessorCourses);
+                }
+
+                ctrlProfessors.Columns.Clear();
+                ctrlProfessors.DataSource = _Professor.PopulateProfessorsDataGridView(selectedCourseId, _CodingSchool);
+
+                if (!ctrlProfessors.Columns.Contains("ViewCourses")) {
+
+                    _CtrlViewProfessorCourses = new DataGridViewButtonColumn();
+                    _CtrlViewProfessorCourses.Name = "ViewCourses";
+                    _CtrlViewProfessorCourses.HeaderText = "View Courses";
+                    _CtrlViewProfessorCourses.UseColumnTextForButtonValue = true;
+                    ctrlProfessors.Columns.Add(_CtrlViewProfessorCourses);
+                }
+
+                ctrlProfessors.Columns[0].Visible = false;
             }
-
-            ctrlProfessors.Columns.Clear();
-            ctrlProfessors.DataSource = _Professor.PopulateProfessorsDataGridView(selectedCourseId, _CodingSchool);
-
-            if (!ctrlProfessors.Columns.Contains("ViewCourses")) {
-
-                _CtrlViewProfessorCourses = new DataGridViewButtonColumn();
-                _CtrlViewProfessorCourses.Name = "ViewCourses";
-                _CtrlViewProfessorCourses.HeaderText = "View Courses";
-                _CtrlViewProfessorCourses.UseColumnTextForButtonValue = true;
-                ctrlProfessors.Columns.Add(_CtrlViewProfessorCourses);
-            }
-
-            ctrlProfessors.Columns[0].Visible = false;
         }
     }
 }
