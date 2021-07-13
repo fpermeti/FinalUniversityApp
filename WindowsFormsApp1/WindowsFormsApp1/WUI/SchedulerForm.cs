@@ -153,6 +153,8 @@ namespace WindowsFormsApp1.WUI {
                     }
 
                     _JsonHandler.SerializeToJson(_CodingSchool);
+
+                    MessageBox.Show(string.Format("The scheduled course was successfully deleted."), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             else {
