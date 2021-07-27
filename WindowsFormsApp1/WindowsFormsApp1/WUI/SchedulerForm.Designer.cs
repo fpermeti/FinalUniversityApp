@@ -39,6 +39,7 @@ namespace WindowsFormsApp1.WUI {
             this.lblSchedules = new System.Windows.Forms.Label();
             this.lblCalendar = new System.Windows.Forms.Label();
             this.lblAddSchedule = new System.Windows.Forms.Label();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ctrlCourses)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ctrlProfessors)).BeginInit();
@@ -218,6 +219,11 @@ namespace WindowsFormsApp1.WUI {
             this.lblAddSchedule.TabIndex = 26;
             this.lblAddSchedule.Text = "STEP 4: Add Schedule";
             // 
+            // backgroundWorker1
+            // 
+            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
+            this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
+            // 
             // SchedulerForm
             // 
             this.ClientSize = new System.Drawing.Size(952, 666);
@@ -266,5 +272,6 @@ namespace WindowsFormsApp1.WUI {
         private System.Windows.Forms.Label lblSchedules;
         private System.Windows.Forms.Label lblCalendar;
         private System.Windows.Forms.Label lblAddSchedule;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }

@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
 using WindowsFormsApp1.Impl;
@@ -171,6 +172,8 @@ namespace WindowsFormsApp1.WUI {
 
             ctrlCalendar.MinDate = DateTime.Now;
 
+            backgroundWorker1.RunWorkerAsync();
+
             ctrlSchedules.Columns.Clear();
             ctrlSchedules.DataSource = _Schedule.PopulateSchedulesDataGridView(_CodingSchool);
             ctrlSchedules.Columns[0].Visible = false;
@@ -221,6 +224,18 @@ namespace WindowsFormsApp1.WUI {
 
                 ctrlProfessors.Columns[0].Visible = false;
             }
+        }
+
+        private void backgroundWorker1_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e) {
+
+            ctrlCalendar.MinDate = DateTime.Now;
+
+            backgroundWorker1.RunWorkerAsync();
+        }
+
+        private void backgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e) {
+
+            Thread.Sleep(1000);
         }
     }
 }
