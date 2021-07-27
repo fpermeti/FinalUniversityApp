@@ -169,7 +169,7 @@ namespace WindowsFormsApp1.WUI {
 
             _CodingSchool = _JsonHandler.DeserializeFromJson();
 
-            ctrlCalendar.MinDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour + 1, DateTime.Now.Minute, DateTime.Now.Second);
+            ctrlCalendar.MinDate = DateTime.Now;
 
             ctrlSchedules.Columns.Clear();
             ctrlSchedules.DataSource = _Schedule.PopulateSchedulesDataGridView(_CodingSchool);
